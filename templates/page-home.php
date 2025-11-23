@@ -157,11 +157,8 @@ get_header();
     </div>
 </section>
 
-
 <!-- ========================================
-     CURSOS EM DESTAQUE
-     Layout: Grid 4 colunas
-     Card: Imagem + Badge + Título + Meta + Rating + CTA
+     CURSOS EM DESTAQUE (VERSÃO FINAL BLINDADA)
      ======================================== -->
 <section id="featured-courses" class="featured-courses-section section-padding">
     <div class="container">
@@ -175,32 +172,86 @@ get_header();
         <!-- Grid de Cursos -->
         <div class="row g-4">
             <?php
-            // Query de Cursos em Destaque
-            $args_featured = array(
-                'post_type' => 'curso',
-                'posts_per_page' => 8,
-                'meta_key' => 'curso_destaque',
-                'meta_value' => '1',
-                'orderby' => 'date',
-                'order' => 'DESC'
-            );
-            
-            $featured_courses = new WP_Query($args_featured);
-            
-            if ($featured_courses->have_posts()) :
-                while ($featured_courses->have_posts()) : $featured_courses->the_post();
-                    
-                    // Meta dados customizados
-                    $carga_horaria = get_post_meta(get_the_ID(), 'curso_carga_horaria', true);
-                    $formato = get_post_meta(get_the_ID(), 'curso_formato', true);
-                    $preco = get_post_meta(get_the_ID(), 'curso_preco', true);
-                    $preco_promocional = get_post_meta(get_the_ID(), 'curso_preco_promocional', true);
-                    $nivel = get_post_meta(get_the_ID(), 'curso_nivel', true);
-                    $rating = get_post_meta(get_the_ID(), 'curso_rating', true) ?: 5.0;
-                    $total_alunos = get_post_meta(get_the_ID(), 'curso_total_alunos', true) ?: 0;
-                    
-                    // Categorias
-                    $categories = get_the_terms(get_the_ID(), 'category');
+            try {
+                // Query de Cursos em Destaque
+                $args_featured = array(
+                    'post_type'      => 'curso',
+                    'posts_per_page' => 8,
+                    'orderby'        => 'date',
+                    'order'          => 'DESC',
+                    'post_status'    => 'publish',
+                );
+                
+                $featured_courses = new WP_Query($args_featured);
+                
+                if ($featured_courses->have_posts()) :
+                    while ($featured_courses->have_posts()) : $featured_courses->the_post();
+                        
+                        // ✅ INICIALIZAR COM VALORES PADRÃO SEGUROS
+                        $carga_horaria = '40h';
+                        $formato = 'online';
+                        $preco = 0;
+                        $preco_promocional = 0;
+                        $nivel = 'Intermediário';
+                        $rating = 5.0;
+                        $total_alunos = 0;
+                        
+                        // ✅ PEGAR VALORES (COM VALIDAÇÃO DE TIPO)
+                        try {
+                            if (function_exists('get_field')) {
+                                // ACF
+                                $temp_carga = get_field('curso_carga_horaria');
+                                $carga_horaria = !empty($temp_carga) ? (string)$temp_carga : $carga_horaria;
+                                
+                                $temp_formato = get_field('curso_formato');
+                                $formato = !empty($temp_formato) ? (string)$temp_formato : $formato;
+                                
+                                $temp_preco = get_field('curso_preco');
+                                $preco = !empty($temp_preco) ? floatval($temp_preco) : 0;
+                                
+                                $temp_preco_promo = get_field('curso_preco_promocional');
+                                $preco_promocional = !empty($temp_preco_promo) ? floatval($temp_preco_promo) : 0;
+                                
+                                $temp_nivel = get_field('curso_nivel');
+                                $nivel = !empty($temp_nivel) ? (string)$temp_nivel : $nivel;
+                                
+                                $temp_rating = get_field('curso_rating');
+                                $rating = !empty($temp_rating) ? floatval($temp_rating) : 5.0;
+                                
+                                $temp_alunos = get_field('curso_total_alunos');
+                                $total_alunos = !empty($temp_alunos) ? intval($temp_alunos) : 0;
+                            } else {
+                                // Fallback: post_meta
+                                $temp_carga = get_post_meta(get_the_ID(), 'curso_carga_horaria', true);
+                                $carga_horaria = !empty($temp_carga) ? (string)$temp_carga : $carga_horaria;
+                                
+                                $temp_formato = get_post_meta(get_the_ID(), 'curso_formato', true);
+                                $formato = !empty($temp_formato) ? (string)$temp_formato : $formato;
+                                
+                                $temp_preco = get_post_meta(get_the_ID(), 'curso_preco', true);
+                                $preco = !empty($temp_preco) ? floatval($temp_preco) : 0;
+                                
+                                $temp_preco_promo = get_post_meta(get_the_ID(), 'curso_preco_promocional', true);
+                                $preco_promocional = !empty($temp_preco_promo) ? floatval($temp_preco_promo) : 0;
+                                
+                                $temp_nivel = get_post_meta(get_the_ID(), 'curso_nivel', true);
+                                $nivel = !empty($temp_nivel) ? (string)$temp_nivel : $nivel;
+                                
+                                $temp_rating = get_post_meta(get_the_ID(), 'curso_rating', true);
+                                $rating = !empty($temp_rating) ? floatval($temp_rating) : 5.0;
+                                
+                                $temp_alunos = get_post_meta(get_the_ID(), 'curso_total_alunos', true);
+                                $total_alunos = !empty($temp_alunos) ? intval($temp_alunos) : 0;
+                            }
+                        } catch (Exception $e) {
+                            error_log('Erro ao pegar campos do curso ID ' . get_the_ID() . ': ' . $e->getMessage());
+                        }
+                        
+                        // Categorias (com validação)
+                        $categories = get_the_terms(get_the_ID(), 'category');
+                        if (is_wp_error($categories) || empty($categories)) {
+                            $categories = array();
+                        }
             ?>
             
             <div class="col-12 col-sm-6 col-lg-3">
@@ -215,30 +266,26 @@ get_header();
                         <?php else : ?>
                             <a href="<?php the_permalink(); ?>">
                                 <img src="<?php echo get_stylesheet_directory_uri(); ?>/assets/images/course-placeholder.jpg" 
-                                     alt="<?php the_title(); ?>" class="img-fluid">
+                                     alt="<?php the_title_attribute(); ?>" class="img-fluid">
                             </a>
                         <?php endif; ?>
                         
                         <!-- Badge de Nível -->
-                        <?php if ($nivel) : ?>
-                            <span class="course-badge badge-<?php echo esc_attr(strtolower($nivel)); ?>">
-                                <?php echo esc_html($nivel); ?>
-                            </span>
-                        <?php endif; ?>
+                        <span class="course-badge badge-<?php echo esc_attr(strtolower((string)$nivel)); ?>">
+                            <?php echo esc_html($nivel); ?>
+                        </span>
                         
                         <!-- Badge de Formato -->
-                        <?php if ($formato === 'online') : ?>
-                            <span class="course-format-badge">
-                                <i class="fas fa-video"></i> Online
-                            </span>
-                        <?php endif; ?>
+                        <span class="course-format-badge">
+                            <i class="fas fa-video"></i> <?php echo esc_html(ucfirst((string)$formato)); ?>
+                        </span>
                     </div>
 
                     <!-- Conteúdo do Card -->
                     <div class="course-content">
                         
                         <!-- Categoria -->
-                        <?php if ($categories && !is_wp_error($categories)) : ?>
+                        <?php if (!empty($categories)) : ?>
                             <div class="course-category">
                                 <a href="<?php echo esc_url(get_term_link($categories[0])); ?>">
                                     <?php echo esc_html($categories[0]->name); ?>
@@ -253,12 +300,10 @@ get_header();
 
                         <!-- Meta Info -->
                         <div class="course-meta">
-                            <?php if ($carga_horaria) : ?>
-                                <span class="meta-item">
-                                    <i class="far fa-clock"></i>
-                                    <?php echo esc_html($carga_horaria); ?>
-                                </span>
-                            <?php endif; ?>
+                            <span class="meta-item">
+                                <i class="far fa-clock"></i>
+                                <?php echo esc_html($carga_horaria); ?>
+                            </span>
                             
                             <span class="meta-item">
                                 <i class="far fa-user"></i>
@@ -291,7 +336,7 @@ get_header();
                     <!-- Footer do Card -->
                     <div class="course-footer">
                         <div class="course-price">
-                            <?php if ($preco_promocional && $preco_promocional < $preco) : ?>
+                            <?php if ($preco_promocional > 0 && $preco_promocional < $preco) : ?>
                                 <span class="price-original">R$ <?php echo number_format($preco, 2, ',', '.'); ?></span>
                                 <span class="price-current">R$ <?php echo number_format($preco_promocional, 2, ',', '.'); ?></span>
                             <?php elseif ($preco > 0) : ?>
@@ -309,9 +354,29 @@ get_header();
             </div>
 
             <?php
-                endwhile;
-                wp_reset_postdata();
-            endif;
+                    endwhile;
+                    wp_reset_postdata();
+                else :
+            ?>
+            
+            <div class="col-12">
+                <div class="alert alert-info text-center" role="alert">
+                    Nenhum curso encontrado.
+                </div>
+            </div>
+            
+            <?php 
+                endif;
+            } catch (Exception $e) {
+                error_log('ERRO na seção de cursos: ' . $e->getMessage());
+                ?>
+                <div class="col-12">
+                    <div class="alert alert-danger" role="alert">
+                        Erro ao carregar cursos. Verifique o log.
+                    </div>
+                </div>
+                <?php
+            }
             ?>
         </div>
 
@@ -323,6 +388,7 @@ get_header();
         </div>
     </div>
 </section>
+
 
 
 
