@@ -853,24 +853,3 @@ function camisa10_init_aos() {
     <?php
 }
 add_action( 'wp_footer', 'camisa10_init_aos' );
-
-
-function camisa10_preload_hero_image() {
-    if ( ! is_front_page() ) {
-        return;
-    }
-
-    $slides = get_field( 'hero_slides', 'option' );
-    if ( $slides && isset( $slides['background_image'] ) ) {
-        $first_image = $slides['background_image']['url'];
-        echo '<link rel="preload" as="image" href="' . esc_url( $first_image ) . '">';
-    }
-}
-add_action( 'wp_head', 'camisa10_preload_hero_image', 1 );
-
-
-
-
-// ========================================
-// FIM DO ARQUIVO
-// ========================================
