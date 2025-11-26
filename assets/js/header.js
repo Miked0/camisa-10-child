@@ -1,8 +1,33 @@
-// ========================================
-// HEADER CAMISA 10 - JAVASCRIPT
-// ========================================
+/**
+ * Header JavaScript - Camisa 10
+ * Controla comportamento do header fixo e menu mobile
+ * 
+ * @package OneKorse Child
+ * @since 1.0.0
+ * @updated 2025-11-26 - Corrigido: Throttle implementado para scroll, event listeners organizados
+ */
 
 document.addEventListener('DOMContentLoaded', function() {
+    
+    // ============ UTILITÁRIOS ============
+    
+    /**
+     * Throttle - Limita execução de função
+     * @param {Function} func - Função a ser executada
+     * @param {Number} limit - Tempo mínimo entre execuções (ms)
+     */
+    const throttle = (func, limit) => {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    };
     
     // ============ VARIÁVEIS ============
     const header = document.querySelector('.site-header');
@@ -10,10 +35,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const mobileNav = document.querySelector('.mobile-nav');
     const body = document.body;
     
-    // ============ SCROLL EFFECT ============
+    // ============ SCROLL EFFECT (COM THROTTLE) ============
     let lastScroll = 0;
     
-    window.addEventListener('scroll', function() {
+    const handleScroll = function() {
         const currentScroll = window.pageYOffset;
         
         // Adiciona classe quando scrollar
@@ -23,34 +48,32 @@ document.addEventListener('DOMContentLoaded', function() {
             header.classList.remove('scrolled');
         }
         
-        // Hide/Show header ao scrollar (OPCIONAL - descomente para ativar)
-        /*
-        if (currentScroll > lastScroll && currentScroll > 100) {
-            header.style.transform = 'translateY(-100%)';
-        } else {
-            header.style.transform = 'translateY(0)';
-        }
-        */
-        
         lastScroll = currentScroll;
-    });
+    };
+    
+    // ✅ Aplicar throttle (60fps = ~16ms)
+    window.addEventListener('scroll', throttle(handleScroll, 16));
     
     // ============ MOBILE MENU TOGGLE ============
     if (mobileToggle && mobileNav) {
-        mobileToggle.addEventListener('click', function() {
-            this.classList.toggle('active');
+        const toggleMobileMenu = function() {
+            mobileToggle.classList.toggle('active');
             mobileNav.classList.toggle('active');
             body.classList.toggle('mobile-menu-open');
-        });
+        };
+        
+        mobileToggle.addEventListener('click', toggleMobileMenu);
         
         // Fechar menu ao clicar fora
-        document.addEventListener('click', function(e) {
+        const closeMenuOnClickOutside = function(e) {
             if (!mobileToggle.contains(e.target) && !mobileNav.contains(e.target)) {
                 mobileToggle.classList.remove('active');
                 mobileNav.classList.remove('active');
                 body.classList.remove('mobile-menu-open');
             }
-        });
+        };
+        
+        document.addEventListener('click', closeMenuOnClickOutside);
     }
     
     // ============ SUBMENU MOBILE ============
@@ -79,15 +102,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (searchBtn) {
         searchBtn.addEventListener('click', function() {
-            // Opção 1: Redirecionar para página de busca
-            // window.location.href = '/busca';
-            
-            // Opção 2: Abrir modal de busca (implementar modal separadamente)
-            // openSearchModal();
-            
-            // Opção 3: Expandir input de busca no header
-            console.log('Busca ativada - implementar funcionalidade');
-            alert('Funcionalidade de busca - implementar conforme necessidade');
+            // TODO: Implementar funcionalidade de busca
+            console.log('Busca ativada - implementar conforme necessidade');
         });
     }
     
@@ -114,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
                 
                 // Fechar menu mobile se estiver aberto
-                if (mobileNav.classList.contains('active')) {
+                if (mobileNav && mobileNav.classList.contains('active')) {
                     mobileToggle.classList.remove('active');
                     mobileNav.classList.remove('active');
                     body.classList.remove('mobile-menu-open');
@@ -128,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const navLinks = document.querySelectorAll('.nav-link');
     
     navLinks.forEach(function(link) {
-        const linkPath = link.getAttribute('href');
+        const linkPath = new URL(link.href).pathname;
         
         // Highlight exato ou se for uma subpágina
         if (linkPath === currentPath || 
@@ -139,39 +155,40 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // ============ CLOSE MOBILE MENU ON RESIZE ============
     let resizeTimer;
-    window.addEventListener('resize', function() {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function() {
-            if (window.innerWidth > 1024) {
-                mobileNav.classList.remove('active');
+    const handleResize = function() {
+        if (window.innerWidth > 1024 && mobileNav) {
+            mobileNav.classList.remove('active');
+            if (mobileToggle) {
                 mobileToggle.classList.remove('active');
-                body.classList.remove('mobile-menu-open');
             }
-        }, 250);
-    });
-    
-    // ============ PREVENT SCROLL WHEN MOBILE MENU OPEN ============
-    const preventScroll = function(e) {
-        if (body.classList.contains('mobile-menu-open')) {
-            e.preventDefault();
+            body.classList.remove('mobile-menu-open');
         }
     };
     
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(handleResize, 250);
+    });
+    
     // ============ KEYBOARD ACCESSIBILITY ============
     // ESC para fechar menu mobile
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+    const closeMenuOnEsc = function(e) {
+        if (e.key === 'Escape' && mobileNav && mobileNav.classList.contains('active')) {
             mobileToggle.classList.remove('active');
             mobileNav.classList.remove('active');
             body.classList.remove('mobile-menu-open');
         }
-    });
+    };
+    
+    document.addEventListener('keydown', closeMenuOnEsc);
     
 });
 
 // ============ FUNÇÕES AUXILIARES ============
 
-// Função para adicionar classe ao body quando header está fixo
+/**
+ * Adiciona padding ao body para compensar header fixo
+ */
 function handleHeaderOffset() {
     const header = document.querySelector('.site-header');
     if (header) {
@@ -182,5 +199,18 @@ function handleHeaderOffset() {
 // Executar ao carregar
 handleHeaderOffset();
 
-// Executar ao redimensionar
-window.addEventListener('resize', handleHeaderOffset);
+// Executar ao redimensionar (com throttle)
+const throttleResize = (func, limit) => {
+    let inThrottle;
+    return function() {
+        const args = arguments;
+        const context = this;
+        if (!inThrottle) {
+            func.apply(context, args);
+            inThrottle = true;
+            setTimeout(() => inThrottle = false, limit);
+        }
+    };
+};
+
+window.addEventListener('resize', throttleResize(handleHeaderOffset, 250));
