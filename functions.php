@@ -853,3 +853,205 @@ function camisa10_init_aos() {
     <?php
 }
 add_action( 'wp_footer', 'camisa10_init_aos' );
+
+
+
+
+
+// /**
+//  * Enfileirar CSS e JS para Single Curso
+//  * Priority: 25 (após tema pai)
+//  */
+// function camisa10_enqueue_single_curso_assets() {
+//     // Só carrega na página single-curso
+//     if (!is_singular(['curso', 'sfwd-courses'])) {
+//         return;
+//     }
+    
+//     // CSS Single Curso
+//     $css_file = get_stylesheet_directory() . '/assets/css/single-curso.css';
+//     if (file_exists($css_file)) {
+//         wp_enqueue_style(
+//             'camisa10-single-curso',
+//             get_stylesheet_directory_uri() . '/assets/css/single-curso.css',
+//             ['onekorse-parent-style'],
+//             filemtime($css_file), // Versão dinâmica
+//             'all'
+//         );
+//     }
+    
+//     // AOS (Animate On Scroll) - CDN
+//     wp_enqueue_style(
+//         'aos-css',
+//         'https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css',
+//         [],
+//         '2.3.4'
+//     );
+    
+//     wp_enqueue_script(
+//         'aos-js',
+//         'https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js',
+//         [],
+//         '2.3.4',
+//         true
+//     );
+    
+//     // FAQ JavaScript
+//     $js_file = get_stylesheet_directory() . '/assets/js/single-curso.js';
+//     if (file_exists($js_file)) {
+//         wp_enqueue_script(
+//             'camisa10-single-curso-js',
+//             get_stylesheet_directory_uri() . '/assets/js/single-curso.js',
+//             ['jquery'],
+//             filemtime($js_file),
+//             true
+//         );
+//     }
+    
+//     // Inicializa AOS
+//     wp_add_inline_script('aos-js', '
+//         document.addEventListener("DOMContentLoaded", function() {
+//             if (typeof AOS !== "undefined") {
+//                 AOS.init({
+//                     duration: 600,
+//                     easing: "ease-out-cubic",
+//                     once: true,
+//                     offset: 50,
+//                     disable: function() {
+//                         return window.innerWidth < 768;
+//                     }
+//                 });
+//             }
+//         });
+//     ');
+// }
+// add_action('wp_enqueue_scripts', 'camisa10_enqueue_single_curso_assets', 25);
+
+// /**
+//  * Força WordPress a usar template correto
+//  * Importante: WordPress não lê /templates/ por padrão
+//  */
+// function camisa10_single_curso_template($template) {
+//     if (is_singular(['curso', 'sfwd-courses'])) {
+//         $custom_template = get_stylesheet_directory() . '/templates/single-curso.php';
+        
+//         if (file_exists($custom_template)) {
+//             return $custom_template;
+//         }
+//     }
+    
+//     return $template;
+// }
+// add_filter('single_template', 'camisa10_single_curso_template', 20);
+
+// /**
+//  * Adiciona classe específica no body
+//  * Necessária para CSS targeting sem conflitos
+//  */
+// function camisa10_body_class_single_curso($classes) {
+//     if (is_singular(['curso', 'sfwd-courses'])) {
+//         $classes[] = 'single-curso';
+//         $classes[] = 'page-curso-individual';
+        
+//         // Remove classes conflitantes do tema pai
+//         $classes = array_diff($classes, [
+//             'page-one-column',
+//             'sidebar-primary',
+//             'centered-layout'
+//         ]);
+//     }
+    
+//     return $classes;
+// }
+// add_filter('body_class', 'camisa10_body_class_single_curso', 20);
+
+// /**
+//  * Adiciona suporte a tema escuro
+//  */
+// function camisa10_dark_mode_script() {
+//     if (is_singular(['curso', 'sfwd-courses'])) {
+//         ?>
+//         <script>
+//         (function() {
+//             const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+//             const savedTheme = localStorage.getItem('theme');
+            
+//             if (savedTheme) {
+//                 document.documentElement.setAttribute('data-theme', savedTheme);
+//             } else if (prefersDark) {
+//                 document.documentElement.setAttribute('data-theme', 'dark');
+//             }
+//         })();
+//         </script>
+//         <?php
+//     }
+// }
+// add_action('wp_head', 'camisa10_dark_mode_script', 1);
+
+// /**
+//  * Função auxiliar: Sanitiza valores ACF
+//  * Previne erros "Illegal offset type"
+//  */
+// function camisa10_sanitize_acf_value($value, $default = '', $allowed = []) {
+//     // Converte arrays para string (pega primeiro valor)
+//     if (is_array($value)) {
+//         $value = isset($value[0]) ? $value[0] : $default;
+//     }
+    
+//     // Converte para string e remove espaços
+//     $value = $value ? trim((string)$value) : $default;
+    
+//     // Se há lista de valores permitidos, valida
+//     if (!empty($allowed) && !in_array($value, $allowed, true)) {
+//         $value = $default;
+//     }
+    
+//     return $value;
+// }
+
+// /**
+//  * Debug helper (remover em produção)
+//  */
+// if (defined('WP_DEBUG') && WP_DEBUG) {
+//     function camisa10_debug_single_curso() {
+//         if (is_singular(['curso', 'sfwd-courses'])) {
+//             error_log('Single Curso Debug - ID: ' . get_the_ID() . ', Template carregado');
+//         }
+//     }
+//     add_action('wp', 'camisa10_debug_single_curso');
+// }
+
+
+// Enfileira CSS Single Curso
+function camisa10_single_curso_css() {
+    if (is_singular(array('curso', 'sfwd-courses'))) {
+        wp_enqueue_style(
+            'camisa10-single-curso',
+            get_stylesheet_directory_uri() . '/assets/css/single-curso.css',
+            array(),
+            '3.0.0'
+        );
+    }
+}
+add_action('wp_enqueue_scripts', 'camisa10_single_curso_css', 99);
+
+// Força template correto
+function camisa10_curso_template($template) {
+    if (is_singular(array('curso', 'sfwd-courses'))) {
+        $new_template = get_stylesheet_directory() . '/templates/single-curso.php';
+        if (file_exists($new_template)) {
+            return $new_template;
+        }
+    }
+    return $template;
+}
+add_filter('single_template', 'camisa10_curso_template', 99);
+
+// Adiciona classe no body
+function camisa10_curso_body_class($classes) {
+    if (is_singular(array('curso', 'sfwd-courses'))) {
+        $classes[] = 'single-curso';
+    }
+    return $classes;
+}
+add_filter('body_class', 'camisa10_curso_body_class', 99);
