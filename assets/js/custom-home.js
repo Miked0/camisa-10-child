@@ -1,20 +1,78 @@
 /**
- * Custom Home Scripts - Camisa 10 (Atualizado)
+ * Custom Home Scripts - Camisa 10
  * JavaScript complementar para page-home.php
+ * 
  * @package OneKorse Child
  * @since 2.0.0
+ * @updated 2025-11-26 - Corrigido: Sistema de debug condicional, localStorage com try-catch, cleanup de observers
  */
 
 (function($) {
     'use strict';
 
+    // ========================================
+    // SISTEMA DE DEBUG CONDICIONAL
+    // ========================================
+    const DEBUG = window.location.hostname === 'localhost' || 
+                  window.location.hostname === '127.0.0.1' ||
+                  window.location.search.includes('debug=true');
+    
+    const log = function(...args) {
+        if (DEBUG) {
+            console.log(...args);
+        }
+    };
+    
+    const warn = function(...args) {
+        if (DEBUG) {
+            console.warn(...args);
+        }
+    };
+    
+    const error = function(...args) {
+        // Erros sempre logam (críticos para troubleshooting)
+        console.error(...args);
+    };
+
+    // ========================================
+    // UTILITÁRIOS - localStorage SEGURO
+    // ========================================
+    
+    /**
+     * Acesso seguro ao localStorage (compatível com private mode)
+     */
+    const getSafeLocalStorage = function(key) {
+        try {
+            return localStorage.getItem(key);
+        } catch (e) {
+            warn('localStorage não disponível (modo privado?):', e);
+            return null;
+        }
+    };
+
+    const setSafeLocalStorage = function(key, value) {
+        try {
+            localStorage.setItem(key, value);
+            return true;
+        } catch (e) {
+            warn('Não foi possível salvar no localStorage:', e);
+            return false;
+        }
+    };
+
+    // ========================================
+    // OBJETO PRINCIPAL
+    // ========================================
     const Camisa10HomePage = {
+        
+        // Array para guardar observers (cleanup posterior)
+        observers: [],
 
         /**
          * Inicializa todos os módulos
          */
         init: function() {
-            console.log('🚀 Camisa 10 Homepage Scripts v2.0 carregados');
+            log('🚀 Camisa 10 Homepage Scripts v2.0 carregados');
 
             this.heroCarousel();
             this.filterHandling();
@@ -27,18 +85,18 @@
         },
 
         /**
-         * Hero Carousel Bootstrap 5
+         * Hero Carousel Bootstrap 5 com Fallback
          */
         heroCarousel: function() {
             const carouselEl = document.getElementById('heroCarousel');
 
             if (!carouselEl) {
-                console.warn('⚠️ Hero Carousel não encontrado');
+                warn('⚠️ Hero Carousel não encontrado');
                 return;
             }
 
             if (typeof bootstrap === 'undefined') {
-                console.error('❌ Bootstrap 5 não carregado');
+                error('❌ Bootstrap 5 não carregado');
                 return;
             }
 
@@ -51,15 +109,30 @@
                     touch: true
                 });
 
-                console.log('✅ Hero Carousel inicializado');
+                log('✅ Hero Carousel inicializado');
 
-                // Event tracking
-                carouselEl.addEventListener('slide.bs.carousel', function(e) {
-                    console.log('📊 Carousel slide:', e.to);
-                });
+                // Event tracking (apenas em debug)
+                if (DEBUG) {
+                    carouselEl.addEventListener('slide.bs.carousel', function(e) {
+                        log('📊 Carousel slide:', e.to);
+                    });
+                }
 
-            } catch (error) {
-                console.error('❌ Erro ao inicializar carousel:', error);
+            } catch (err) {
+                error('❌ Erro ao inicializar carousel:', err);
+                
+                // ✅ FALLBACK: Mostrar primeira imagem estática
+                const firstSlide = carouselEl.querySelector('.carousel-item');
+                if (firstSlide) {
+                    firstSlide.classList.add('active');
+                    carouselEl.style.minHeight = '600px';
+                    
+                    // Ocultar controles que não funcionarão
+                    const controls = carouselEl.querySelectorAll('.carousel-control-prev, .carousel-control-next, .carousel-indicators');
+                    controls.forEach(control => control.style.display = 'none');
+                    
+                    log('⚠️ Carousel em modo fallback (imagem estática)');
+                }
             }
         },
 
@@ -72,10 +145,11 @@
             if (!filterForm) return;
 
             filterForm.addEventListener('submit', function(e) {
-                console.log('🔍 Filtros enviados');
+                log('🔍 Filtros enviados');
 
-                // Google Analytics tracking
-                if (typeof gtag !== 'undefined') {
+                // Google Analytics tracking (apenas se consentimento OK)
+                const hasConsent = getSafeLocalStorage('cookie_consent') === 'true';
+                if (hasConsent && typeof gtag !== 'undefined') {
                     gtag('event', 'filter_courses', {
                         'event_category': 'Engagement',
                         'event_label': 'Course Filter'
@@ -89,7 +163,7 @@
          */
         testimonialsSlider: function() {
             if (typeof $.fn.slick === 'undefined') {
-                console.warn('⚠️ Slick Slider não carregado');
+                warn('⚠️ Slick Slider não carregado');
                 return;
             }
 
@@ -133,7 +207,7 @@
                 ]
             });
 
-            console.log('✅ Testimonials Slider inicializado');
+            log('✅ Testimonials Slider inicializado');
         },
 
         /**
@@ -146,18 +220,22 @@
 
             const animateCounter = function(counter) {
                 const target = parseInt(counter.getAttribute('data-count'));
-                const duration = 2000; // 2 segundos
-                const increment = target / (duration / 16); // 60fps
+                const duration = 2000;
+                const increment = target / (duration / 16);
                 let current = 0;
+                let animationFrameId = null;
 
                 const updateCounter = function() {
                     current += increment;
 
                     if (current < target) {
                         counter.textContent = Math.floor(current).toLocaleString('pt-BR');
-                        requestAnimationFrame(updateCounter);
+                        animationFrameId = requestAnimationFrame(updateCounter);
                     } else {
                         counter.textContent = target.toLocaleString('pt-BR');
+                        if (animationFrameId) {
+                            cancelAnimationFrame(animationFrameId);
+                        }
                     }
                 };
 
@@ -177,8 +255,11 @@
             counters.forEach(function(counter) {
                 observer.observe(counter);
             });
+            
+            // ✅ Guardar referência para cleanup
+            Camisa10HomePage.observers.push(observer);
 
-            console.log('✅ Statistics Counter inicializado');
+            log('✅ Statistics Counter inicializado');
         },
 
         /**
@@ -201,40 +282,47 @@
                 elements.forEach(function(el) {
                     observer.observe(el);
                 });
+                
+                // ✅ Guardar referência para cleanup
+                Camisa10HomePage.observers.push(observer);
 
-                console.log('✅ Animate on Scroll ativado para', elements.length, 'elementos');
+                log('✅ Animate on Scroll ativado para', elements.length, 'elementos');
             }
         },
 
         /**
-         * Wishlist/Favoritos
+         * Wishlist/Favoritos - VANILLA JS
          */
         wishlistHandling: function() {
-            $('.wishlist-btn').on('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                const $btn = $(this);
-                const courseId = $btn.data('course-id');
-
-                $btn.toggleClass('active');
-
-                if ($btn.hasClass('active')) {
-                    $btn.find('i').removeClass('far').addClass('fas');
-                    console.log('❤️ Curso adicionado aos favoritos:', courseId);
-                } else {
-                    $btn.find('i').removeClass('fas').addClass('far');
-                    console.log('💔 Curso removido dos favoritos:', courseId);
-                }
-
-                // Google Analytics
-                if (typeof gtag !== 'undefined') {
-                    gtag('event', 'wishlist_toggle', {
-                        'event_category': 'Engagement',
-                        'event_label': 'Course ' + courseId,
-                        'value': $btn.hasClass('active') ? 1 : 0
-                    });
-                }
+            const wishlistBtns = document.querySelectorAll('.wishlist-btn');
+            
+            wishlistBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const courseId = this.dataset.courseId;
+                    this.classList.toggle('active');
+                    
+                    const icon = this.querySelector('i');
+                    if (this.classList.contains('active')) {
+                        icon.classList.replace('far', 'fas');
+                        log('❤️ Curso adicionado aos favoritos:', courseId);
+                    } else {
+                        icon.classList.replace('fas', 'far');
+                        log('💔 Curso removido dos favoritos:', courseId);
+                    }
+                    
+                    // Google Analytics (com consentimento)
+                    const hasConsent = getSafeLocalStorage('cookie_consent') === 'true';
+                    if (hasConsent && typeof gtag !== 'undefined') {
+                        gtag('event', 'wishlist_toggle', {
+                            'event_category': 'Engagement',
+                            'event_label': 'Course ' + courseId,
+                            'value': this.classList.contains('active') ? 1 : 0
+                        });
+                    }
+                });
             });
         },
 
@@ -242,16 +330,28 @@
          * Smooth Scroll
          */
         smoothScroll: function() {
-            $('a[href^="#"]').on('click', function(e) {
-                const target = $(this.getAttribute('href'));
-
-                if (target.length) {
-                    e.preventDefault();
-
-                    $('html, body').stop().animate({
-                        scrollTop: target.offset().top - 80
-                    }, 800, 'swing');
-                }
+            const smoothLinks = document.querySelectorAll('a[href^="#"]');
+            
+            smoothLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    
+                    if (targetId === '#') return;
+                    
+                    const target = document.querySelector(targetId);
+                    
+                    if (target) {
+                        e.preventDefault();
+                        
+                        const headerHeight = document.querySelector('.site-header')?.offsetHeight || 80;
+                        const targetPosition = target.offsetTop - headerHeight;
+                        
+                        window.scrollTo({
+                            top: targetPosition,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
             });
         },
 
@@ -280,24 +380,49 @@
                 lazyImages.forEach(function(img) {
                     imageObserver.observe(img);
                 });
+                
+                // ✅ Guardar referência para cleanup
+                Camisa10HomePage.observers.push(imageObserver);
 
                 if (lazyImages.length > 0) {
-                    console.log('✅ Lazy Loading ativado para', lazyImages.length, 'imagens');
+                    log('✅ Lazy Loading ativado para', lazyImages.length, 'imagens');
                 }
+            }
+        },
+        
+        /**
+         * ✅ Cleanup - Desconectar todos os observers
+         */
+        cleanup: function() {
+            if (this.observers && this.observers.length > 0) {
+                this.observers.forEach(observer => {
+                    observer.disconnect();
+                });
+                this.observers = [];
+                log('🧹 Observers desconectados');
             }
         }
     };
 
-    // Inicialização ao carregar DOM
+    // ========================================
+    // INICIALIZAÇÃO
+    // ========================================
     $(document).ready(function() {
         Camisa10HomePage.init();
     });
 
     // Validação final após carregamento completo
     $(window).on('load', function() {
-        console.log('═══════════════════════════════════════');
-        console.log('✅ CAMISA 10 HOMEPAGE - TOTALMENTE CARREGADA');
-        console.log('═══════════════════════════════════════');
+        if (DEBUG) {
+            console.log('═══════════════════════════════════════');
+            console.log('✅ CAMISA 10 HOMEPAGE - TOTALMENTE CARREGADA');
+            console.log('═══════════════════════════════════════');
+        }
+    });
+    
+    // ✅ Cleanup ao sair da página
+    window.addEventListener('beforeunload', function() {
+        Camisa10HomePage.cleanup();
     });
 
 })(jQuery);
