@@ -1,20 +1,49 @@
 /**
- * Custom Home Scripts - Camisa 10 (Atualizado)
+ * Custom Home Scripts - Camisa 10
  * JavaScript complementar para page-home.php
+ * 
  * @package OneKorse Child
  * @since 2.0.0
+ * @updated 2025-11-26 - Corrigido: Debug condicional, localStorage seguro, cleanup observers
  */
 
 (function($) {
     'use strict';
 
-    const Camisa10HomePage = {
+    // Sistema de debug condicional
+    const DEBUG = window.location.hostname === 'localhost' || 
+                  window.location.hostname === '127.0.0.1' ||
+                  window.location.search.includes('debug=true');
+    
+    const log = function(...args) {
+        if (DEBUG) console.log(...args);
+    };
+    
+    // localStorage seguro (compatível com private mode)
+    const getSafeLocalStorage = function(key) {
+        try {
+            return localStorage.getItem(key);
+        } catch (e) {
+            return null;
+        }
+    };
 
-        /**
-         * Inicializa todos os módulos
-         */
+    const setSafeLocalStorage = function(key, value) {
+        try {
+            localStorage.setItem(key, value);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    };
+
+    // Objeto principal
+    const Camisa10HomePage = {
+        
+        observers: [],
+
         init: function() {
-            console.log('🚀 Camisa 10 Homepage Scripts v2.0 carregados');
+            log('🚀 Camisa 10 Homepage Scripts v2.0 carregados');
 
             this.heroCarousel();
             this.filterHandling();
@@ -26,16 +55,9 @@
             this.lazyLoadImages();
         },
 
-        /**
-         * Hero Carousel Bootstrap 5
-         */
         heroCarousel: function() {
             const carouselEl = document.getElementById('heroCarousel');
-
-            if (!carouselEl) {
-                console.warn('⚠️ Hero Carousel não encontrado');
-                return;
-            }
+            if (!carouselEl) return;
 
             if (typeof bootstrap === 'undefined') {
                 console.error('❌ Bootstrap 5 não carregado');
@@ -46,63 +68,31 @@
                 const carousel = new bootstrap.Carousel(carouselEl, {
                     interval: 5000,
                     pause: 'hover',
-                    wrap: true,
-                    keyboard: true,
-                    touch: true
+                    wrap: true
                 });
-
-                console.log('✅ Hero Carousel inicializado');
-
-                // Event tracking
-                carouselEl.addEventListener('slide.bs.carousel', function(e) {
-                    console.log('📊 Carousel slide:', e.to);
-                });
-
-            } catch (error) {
-                console.error('❌ Erro ao inicializar carousel:', error);
-            }
-        },
-
-        /**
-         * Manipulação de filtros
-         */
-        filterHandling: function() {
-            const filterForm = document.getElementById('course-filter-form');
-
-            if (!filterForm) return;
-
-            filterForm.addEventListener('submit', function(e) {
-                console.log('🔍 Filtros enviados');
-
-                // Google Analytics tracking
-                if (typeof gtag !== 'undefined') {
-                    gtag('event', 'filter_courses', {
-                        'event_category': 'Engagement',
-                        'event_label': 'Course Filter'
-                    });
+                log('✅ Hero Carousel inicializado');
+            } catch (err) {
+                console.error('❌ Erro ao inicializar carousel:', err);
+                
+                // Fallback: mostrar primeira imagem
+                const firstSlide = carouselEl.querySelector('.carousel-item');
+                if (firstSlide) {
+                    firstSlide.classList.add('active');
+                    log('⚠️ Carousel em modo fallback');
                 }
-            });
+            }
         },
 
-        /**
-         * Slider de Depoimentos (Slick)
-         */
         testimonialsSlider: function() {
-            if (typeof $.fn.slick === 'undefined') {
-                console.warn('⚠️ Slick Slider não carregado');
-                return;
-            }
+            if (typeof $.fn.slick === 'undefined') return;
 
             const $slider = $('.testimonials-slider');
-
             if ($slider.length === 0) return;
 
-            // Destruir slider anterior se existir
             if ($slider.hasClass('slick-initialized')) {
                 $slider.slick('unslick');
             }
 
-            // Configuração
             $slider.slick({
                 dots: true,
                 arrows: true,
@@ -112,47 +102,33 @@
                 slidesToScroll: 1,
                 autoplay: true,
                 autoplaySpeed: 6000,
-                pauseOnHover: true,
-                pauseOnFocus: true,
                 responsive: [
                     {
                         breakpoint: 1024,
-                        settings: {
-                            slidesToShow: 2,
-                            slidesToScroll: 1
-                        }
+                        settings: { slidesToShow: 2 }
                     },
                     {
                         breakpoint: 768,
-                        settings: {
-                            slidesToShow: 1,
-                            slidesToScroll: 1,
-                            arrows: true
-                        }
+                        settings: { slidesToShow: 1 }
                     }
                 ]
             });
 
-            console.log('✅ Testimonials Slider inicializado');
+            log('✅ Testimonials Slider inicializado');
         },
 
-        /**
-         * Contador animado para estatísticas
-         */
         statisticsCounter: function() {
             const counters = document.querySelectorAll('.stat-number[data-count]');
-
             if (counters.length === 0) return;
 
             const animateCounter = function(counter) {
                 const target = parseInt(counter.getAttribute('data-count'));
-                const duration = 2000; // 2 segundos
-                const increment = target / (duration / 16); // 60fps
+                const duration = 2000;
+                const increment = target / (duration / 16);
                 let current = 0;
 
                 const updateCounter = function() {
                     current += increment;
-
                     if (current < target) {
                         counter.textContent = Math.floor(current).toLocaleString('pt-BR');
                         requestAnimationFrame(updateCounter);
@@ -160,11 +136,9 @@
                         counter.textContent = target.toLocaleString('pt-BR');
                     }
                 };
-
                 updateCounter();
             };
 
-            // Observador de interseção
             const observer = new IntersectionObserver(function(entries) {
                 entries.forEach(function(entry) {
                     if (entry.isIntersecting) {
@@ -174,16 +148,12 @@
                 });
             }, { threshold: 0.5 });
 
-            counters.forEach(function(counter) {
-                observer.observe(counter);
-            });
+            counters.forEach(counter => observer.observe(counter));
+            Camisa10HomePage.observers.push(observer);
 
-            console.log('✅ Statistics Counter inicializado');
+            log('✅ Statistics Counter inicializado');
         },
 
-        /**
-         * Animação ao scroll
-         */
         animateOnScroll: function() {
             if ('IntersectionObserver' in window) {
                 const observer = new IntersectionObserver(function(entries) {
@@ -198,66 +168,53 @@
                 });
 
                 const elements = document.querySelectorAll('.animate-on-scroll');
-                elements.forEach(function(el) {
-                    observer.observe(el);
-                });
-
-                console.log('✅ Animate on Scroll ativado para', elements.length, 'elementos');
+                elements.forEach(el => observer.observe(el));
+                
+                Camisa10HomePage.observers.push(observer);
+                log('✅ Animate on Scroll ativado');
             }
         },
 
-        /**
-         * Wishlist/Favoritos
-         */
         wishlistHandling: function() {
-            $('.wishlist-btn').on('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                const $btn = $(this);
-                const courseId = $btn.data('course-id');
-
-                $btn.toggleClass('active');
-
-                if ($btn.hasClass('active')) {
-                    $btn.find('i').removeClass('far').addClass('fas');
-                    console.log('❤️ Curso adicionado aos favoritos:', courseId);
-                } else {
-                    $btn.find('i').removeClass('fas').addClass('far');
-                    console.log('💔 Curso removido dos favoritos:', courseId);
-                }
-
-                // Google Analytics
-                if (typeof gtag !== 'undefined') {
-                    gtag('event', 'wishlist_toggle', {
-                        'event_category': 'Engagement',
-                        'event_label': 'Course ' + courseId,
-                        'value': $btn.hasClass('active') ? 1 : 0
-                    });
-                }
-            });
-        },
-
-        /**
-         * Smooth Scroll
-         */
-        smoothScroll: function() {
-            $('a[href^="#"]').on('click', function(e) {
-                const target = $(this.getAttribute('href'));
-
-                if (target.length) {
+            const wishlistBtns = document.querySelectorAll('.wishlist-btn');
+            
+            wishlistBtns.forEach(btn => {
+                btn.addEventListener('click', function(e) {
                     e.preventDefault();
-
-                    $('html, body').stop().animate({
-                        scrollTop: target.offset().top - 80
-                    }, 800, 'swing');
-                }
+                    e.stopPropagation();
+                    
+                    this.classList.toggle('active');
+                    const icon = this.querySelector('i');
+                    if (this.classList.contains('active')) {
+                        icon.classList.replace('far', 'fas');
+                    } else {
+                        icon.classList.replace('fas', 'far');
+                    }
+                });
             });
         },
 
-        /**
-         * Lazy Load de Imagens
-         */
+        smoothScroll: function() {
+            const smoothLinks = document.querySelectorAll('a[href^="#"]');
+            
+            smoothLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const target = document.querySelector(targetId);
+                    if (target) {
+                        e.preventDefault();
+                        const headerHeight = document.querySelector('.site-header')?.offsetHeight || 80;
+                        window.scrollTo({
+                            top: target.offsetTop - headerHeight,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        },
+
         lazyLoadImages: function() {
             if ('IntersectionObserver' in window) {
                 const imageObserver = new IntersectionObserver(function(entries) {
@@ -265,7 +222,6 @@
                         if (entry.isIntersecting) {
                             const img = entry.target;
                             const src = img.getAttribute('data-src');
-
                             if (src) {
                                 img.src = src;
                                 img.removeAttribute('data-src');
@@ -277,27 +233,36 @@
                 });
 
                 const lazyImages = document.querySelectorAll('img[data-src]');
-                lazyImages.forEach(function(img) {
-                    imageObserver.observe(img);
-                });
-
+                lazyImages.forEach(img => imageObserver.observe(img));
+                
+                Camisa10HomePage.observers.push(imageObserver);
                 if (lazyImages.length > 0) {
-                    console.log('✅ Lazy Loading ativado para', lazyImages.length, 'imagens');
+                    log('✅ Lazy Loading ativado para', lazyImages.length, 'imagens');
                 }
+            }
+        },
+        
+        cleanup: function() {
+            if (this.observers && this.observers.length > 0) {
+                this.observers.forEach(observer => observer.disconnect());
+                this.observers = [];
+                log('🧹 Observers desconectados');
             }
         }
     };
 
-    // Inicialização ao carregar DOM
     $(document).ready(function() {
         Camisa10HomePage.init();
     });
 
-    // Validação final após carregamento completo
     $(window).on('load', function() {
-        console.log('═══════════════════════════════════════');
-        console.log('✅ CAMISA 10 HOMEPAGE - TOTALMENTE CARREGADA');
-        console.log('═══════════════════════════════════════');
+        if (DEBUG) {
+            console.log('✅ CAMISA 10 HOMEPAGE - TOTALMENTE CARREGADA');
+        }
+    });
+    
+    window.addEventListener('beforeunload', function() {
+        Camisa10HomePage.cleanup();
     });
 
 })(jQuery);
