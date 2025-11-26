@@ -4,18 +4,12 @@
  * 
  * @package OneKorse Child
  * @since 1.0.0
- * @updated 2025-11-26 - Corrigido: Throttle implementado para scroll, event listeners organizados
+ * @updated 2025-11-26 - Corrigido: Throttle implementado para scroll
  */
 
 document.addEventListener('DOMContentLoaded', function() {
     
-    // ============ UTILITÁRIOS ============
-    
-    /**
-     * Throttle - Limita execução de função
-     * @param {Function} func - Função a ser executada
-     * @param {Number} limit - Tempo mínimo entre execuções (ms)
-     */
+    // Throttle - Limita execução de função
     const throttle = (func, limit) => {
         let inThrottle;
         return function() {
@@ -29,19 +23,18 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     };
     
-    // ============ VARIÁVEIS ============
+    // Variáveis
     const header = document.querySelector('.site-header');
     const mobileToggle = document.querySelector('.mobile-menu-toggle');
     const mobileNav = document.querySelector('.mobile-nav');
     const body = document.body;
     
-    // ============ SCROLL EFFECT (COM THROTTLE) ============
+    // Scroll effect com throttle
     let lastScroll = 0;
     
     const handleScroll = function() {
         const currentScroll = window.pageYOffset;
         
-        // Adiciona classe quando scrollar
         if (currentScroll > 50) {
             header.classList.add('scrolled');
         } else {
@@ -51,10 +44,10 @@ document.addEventListener('DOMContentLoaded', function() {
         lastScroll = currentScroll;
     };
     
-    // ✅ Aplicar throttle (60fps = ~16ms)
+    // Aplicar throttle (60fps = ~16ms)
     window.addEventListener('scroll', throttle(handleScroll, 16));
     
-    // ============ MOBILE MENU TOGGLE ============
+    // Mobile menu toggle
     if (mobileToggle && mobileNav) {
         const toggleMobileMenu = function() {
             mobileToggle.classList.toggle('active');
@@ -65,56 +58,21 @@ document.addEventListener('DOMContentLoaded', function() {
         mobileToggle.addEventListener('click', toggleMobileMenu);
         
         // Fechar menu ao clicar fora
-        const closeMenuOnClickOutside = function(e) {
+        document.addEventListener('click', function(e) {
             if (!mobileToggle.contains(e.target) && !mobileNav.contains(e.target)) {
                 mobileToggle.classList.remove('active');
                 mobileNav.classList.remove('active');
                 body.classList.remove('mobile-menu-open');
             }
-        };
-        
-        document.addEventListener('click', closeMenuOnClickOutside);
-    }
-    
-    // ============ SUBMENU MOBILE ============
-    const mobileDropdowns = document.querySelectorAll('.mobile-menu .has-dropdown');
-    
-    mobileDropdowns.forEach(function(dropdown) {
-        dropdown.addEventListener('click', function(e) {
-            e.preventDefault();
-            const submenu = this.nextElementSibling;
-            if (submenu && submenu.classList.contains('mobile-submenu')) {
-                submenu.classList.toggle('active');
-                
-                // Rotacionar ícone (se tiver)
-                const icon = this.querySelector('i');
-                if (icon) {
-                    icon.style.transform = submenu.classList.contains('active') 
-                        ? 'rotate(180deg)' 
-                        : 'rotate(0deg)';
-                }
-            }
-        });
-    });
-    
-    // ============ SEARCH FUNCTIONALITY ============
-    const searchBtn = document.querySelector('.search-btn');
-    
-    if (searchBtn) {
-        searchBtn.addEventListener('click', function() {
-            // TODO: Implementar funcionalidade de busca
-            console.log('Busca ativada - implementar conforme necessidade');
         });
     }
     
-    // ============ SMOOTH SCROLL ============
+    // Smooth scroll
     const smoothScrollLinks = document.querySelectorAll('a[href^="#"]');
     
     smoothScrollLinks.forEach(function(link) {
         link.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
-            
-            // Ignorar se for apenas "#"
             if (targetId === '#') return;
             
             e.preventDefault();
@@ -129,7 +87,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     behavior: 'smooth'
                 });
                 
-                // Fechar menu mobile se estiver aberto
+                // Fechar menu mobile
                 if (mobileNav && mobileNav.classList.contains('active')) {
                     mobileToggle.classList.remove('active');
                     mobileNav.classList.remove('active');
@@ -139,78 +97,36 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // ============ ACTIVE MENU HIGHLIGHT ============
+    // Active menu highlight
     const currentPath = window.location.pathname;
     const navLinks = document.querySelectorAll('.nav-link');
     
     navLinks.forEach(function(link) {
         const linkPath = new URL(link.href).pathname;
-        
-        // Highlight exato ou se for uma subpágina
-        if (linkPath === currentPath || 
-            (linkPath !== '/' && currentPath.startsWith(linkPath))) {
+        if (linkPath === currentPath || (linkPath !== '/' && currentPath.startsWith(linkPath))) {
             link.classList.add('active');
         }
     });
     
-    // ============ CLOSE MOBILE MENU ON RESIZE ============
+    // Close mobile menu on resize
     let resizeTimer;
-    const handleResize = function() {
-        if (window.innerWidth > 1024 && mobileNav) {
-            mobileNav.classList.remove('active');
-            if (mobileToggle) {
-                mobileToggle.classList.remove('active');
-            }
-            body.classList.remove('mobile-menu-open');
-        }
-    };
-    
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(handleResize, 250);
+        resizeTimer = setTimeout(function() {
+            if (window.innerWidth > 1024 && mobileNav) {
+                mobileNav.classList.remove('active');
+                if (mobileToggle) mobileToggle.classList.remove('active');
+                body.classList.remove('mobile-menu-open');
+            }
+        }, 250);
     });
     
-    // ============ KEYBOARD ACCESSIBILITY ============
-    // ESC para fechar menu mobile
-    const closeMenuOnEsc = function(e) {
+    // ESC para fechar menu
+    document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape' && mobileNav && mobileNav.classList.contains('active')) {
             mobileToggle.classList.remove('active');
             mobileNav.classList.remove('active');
             body.classList.remove('mobile-menu-open');
         }
-    };
-    
-    document.addEventListener('keydown', closeMenuOnEsc);
-    
+    });
 });
-
-// ============ FUNÇÕES AUXILIARES ============
-
-/**
- * Adiciona padding ao body para compensar header fixo
- */
-function handleHeaderOffset() {
-    const header = document.querySelector('.site-header');
-    if (header) {
-        document.body.style.paddingTop = header.offsetHeight + 'px';
-    }
-}
-
-// Executar ao carregar
-handleHeaderOffset();
-
-// Executar ao redimensionar (com throttle)
-const throttleResize = (func, limit) => {
-    let inThrottle;
-    return function() {
-        const args = arguments;
-        const context = this;
-        if (!inThrottle) {
-            func.apply(context, args);
-            inThrottle = true;
-            setTimeout(() => inThrottle = false, limit);
-        }
-    };
-};
-
-window.addEventListener('resize', throttleResize(handleHeaderOffset, 250));
