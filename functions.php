@@ -1,80 +1,97 @@
 <?php
 /**
- * Functions - Camisa 10 Child Theme
- * 
- * @package OneKorse Child
- * @since 1.0.0
- * @updated 2025-11-26 - Corrigido: Validação webhook Hotmart com token, sanitização completa, rate limiting
+ * Camisa 10 Child Theme - Functions
+ * @package Camisa10
+ * @version 6.0.0 - CORRIGIDO
  */
 
-// Exit if accessed directly
+// Prevenir acesso direto
 if (!defined('ABSPATH')) {
     exit;
 }
 
 /**
  * ============================================
- * ENQUEUE STYLES & SCRIPTS
+ * ENFILEIRAMENTO DE ESTILOS DO TEMA PAI
  * ============================================
  */
-
-/**
- * Enfileira estilos e scripts do tema filho
- */
 function camisa10_enqueue_styles() {
-    // Parent theme style
-    wp_enqueue_style('onekorse-parent-style', get_template_directory_uri() . '/style.css');
+    $parent_style = 'onekorse-style';
     
-    // Child theme style
-    wp_enqueue_style('camisa10-child-style', 
-        get_stylesheet_uri(),
-        array('onekorse-parent-style'),
+    wp_enqueue_style($parent_style, get_template_directory_uri() . '/style.css');
+    wp_enqueue_style(
+        'camisa10-child-style',
+        get_stylesheet_directory_uri() . '/style.css',
+        array($parent_style),
         wp_get_theme()->get('Version')
     );
 }
 add_action('wp_enqueue_scripts', 'camisa10_enqueue_styles', 10);
 
 /**
- * Enfileira assets específicos da homepage
+ * ============================================
+ * ASSETS ESPECÍFICOS DA HOMEPAGE
+ * ============================================
  */
 function camisa10_home_assets() {
     if (!is_page_template('page-home.php') && !is_front_page()) {
         return;
     }
 
-    // CSS Variables (Design System)
+    // 1. BOOTSTRAP CSS (PRIMEIRO - ANTES DE TUDO)
+    if (!wp_style_is('bootstrap', 'enqueued')) {
+        wp_enqueue_style(
+            'bootstrap',
+            'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
+            array(),
+            '5.3.0'
+        );
+    }
+
+    // 2. CSS VARIABLES (DESIGN SYSTEM)
     wp_enqueue_style(
         'camisa10-variables',
         get_stylesheet_directory_uri() . '/assets/css/custom-variables.css',
-        array(),
+        array('bootstrap'),
         filemtime(get_stylesheet_directory() . '/assets/css/custom-variables.css')
     );
 
-    // Custom Home CSS
+    // 3. HERO BANNER CSS
+    wp_enqueue_style(
+        'camisa10-hero-banner-css',
+        get_stylesheet_directory_uri() . '/assets/css/hero-banner.css',
+        array('camisa10-variables'),
+        filemtime(get_stylesheet_directory() . '/assets/css/hero-banner.css')
+    );
+
+    // 4. CUSTOM HOME CSS
     wp_enqueue_style(
         'camisa10-home-css',
         get_stylesheet_directory_uri() . '/assets/css/custom-home.css',
-        array('camisa10-variables'),
+        array('camisa10-hero-banner-css'),
         filemtime(get_stylesheet_directory() . '/assets/css/custom-home.css')
     );
 
-    // Bootstrap 5 (CDN)
-    wp_enqueue_script(
-        'bootstrap-js',
-        'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js',
-        array('jquery'),
-        '5.3.0',
-        true
-    );
-
-    // Slick Slider
+    // 5. SLICK SLIDER CSS (OPCIONAL)
     wp_enqueue_style(
         'slick-css',
         'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css',
         array(),
         '1.8.1'
     );
-    
+
+    // 6. BOOTSTRAP JS (COM JQUERY)
+    if (!wp_script_is('bootstrap', 'enqueued')) {
+        wp_enqueue_script(
+            'bootstrap',
+            'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js',
+            array('jquery'),
+            '5.3.0',
+            true
+        );
+    }
+
+    // 7. SLICK SLIDER JS
     wp_enqueue_script(
         'slick-js',
         'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js',
@@ -83,27 +100,20 @@ function camisa10_home_assets() {
         true
     );
 
-    // Swiper
-    wp_enqueue_style(
-        'swiper-css',
-        'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css',
-        array(),
-        '8.4.7'
-    );
-    
+    // 8. HERO BANNER JS
     wp_enqueue_script(
-        'swiper',
-        'https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js',
-        array(),
-        '8.4.7',
+        'camisa10-hero-banner-js',
+        get_stylesheet_directory_uri() . '/assets/js/hero-banner.js',
+        array('jquery', 'bootstrap'),
+        filemtime(get_stylesheet_directory() . '/assets/js/hero-banner.js'),
         true
     );
 
-    // Custom Home JS
+    // 9. CUSTOM HOME JS
     wp_enqueue_script(
         'camisa10-home-js',
         get_stylesheet_directory_uri() . '/assets/js/custom-home.js',
-        array('jquery', 'bootstrap-js', 'slick-js'),
+        array('jquery', 'bootstrap', 'slick-js'),
         filemtime(get_stylesheet_directory() . '/assets/js/custom-home.js'),
         true
     );
@@ -111,265 +121,131 @@ function camisa10_home_assets() {
 add_action('wp_enqueue_scripts', 'camisa10_home_assets', 20);
 
 /**
- * Enfileira assets do header
+ * ============================================
+ * CORREÇÃO: ERRO DEPRECATED DO AVATAR
+ * ============================================
  */
-function camisa10_enqueue_header_assets() {
-    wp_enqueue_script(
-        'camisa10-header-js',
-        get_stylesheet_directory_uri() . '/assets/js/header.js',
-        array(),
-        filemtime(get_stylesheet_directory() . '/assets/js/header.js'),
-        true
-    );
+function camisa10_fix_avatar_deprecated($avatar, $id_or_email, $size, $default, $alt, $args) {
+    // Prevenir erro quando $args['url'] é null
+    if (isset($args['url']) && $args['url'] === null) {
+        $args['url'] = '';
+    }
+    
+    // Se avatar vazio, retornar padrão
+    if (empty($avatar)) {
+        $default_avatar = get_stylesheet_directory_uri() . '/assets/images/avatar-default.png';
+        
+        // Verificar se arquivo existe
+        if (!file_exists(get_stylesheet_directory() . '/assets/images/avatar-default.png')) {
+            $default_avatar = get_avatar_url($id_or_email, array('default' => 'mystery'));
+        }
+        
+        $avatar = '<img src="' . esc_url($default_avatar) . '" alt="' . esc_attr($alt) . '" width="' . esc_attr($size) . '" height="' . esc_attr($size) . '" class="avatar avatar-' . esc_attr($size) . '" />';
+    }
+    
+    return $avatar;
 }
-add_action('wp_enqueue_scripts', 'camisa10_enqueue_header_assets', 20);
+add_filter('get_avatar', 'camisa10_fix_avatar_deprecated', 10, 6);
 
 /**
  * ============================================
- * HOTMART WEBHOOK (COM SEGURANÇA)
+ * HELPER: ACF SAFE GET
  * ============================================
  */
+function get_acf_safe($field_name, $post_id = null, $default = '') {
+    if (!function_exists('get_field')) {
+        return $default;
+    }
+    
+    $value = get_field($field_name, $post_id);
+    
+    // Se for array (select, taxonomy, relationship)
+    if (is_array($value)) {
+        // ACF Select com return format 'array'
+        if (isset($value['value'])) {
+            return $value['value'];
+        }
+        
+        // ACF Select com return format 'label'
+        if (isset($value['label'])) {
+            return $value['label'];
+        }
+        
+        // Taxonomy ou relationship - pegar primeiro termo
+        if (!empty($value)) {
+            $first = reset($value);
+            if (is_object($first) && isset($first->name)) {
+                return $first->name;
+            }
+            return (string)$first;
+        }
+        
+        return $default;
+    }
+    
+    // Se for WP_Error
+    if (is_wp_error($value)) {
+        return $default;
+    }
+    
+    // Se for vazio
+    if (empty($value)) {
+        return $default;
+    }
+    
+    return $value;
+}
 
 /**
- * ✅ Webhook Hotmart com Validação de Segurança
- * 
- * IMPORTANTE: Configurar token no admin WordPress:
- * update_option('camisa10_hotmart_webhook_token', 'SEU_TOKEN_HOTMART_AQUI');
- * 
- * Token obtido em: Hotmart > Configurações > Webhooks > Hot Token
+ * Helper para pegar número ACF com segurança
  */
-function camisa10_hotmart_webhook_listener() {
-    // Verificar se é request do webhook
-    if (!isset($_GET['hotmart_webhook'])) {
-        return;
-    }
-
-    // ============================================
-    // PASSO 1: VALIDAR TOKEN HOTMART (SEGURANÇA)
-    // ============================================
-    $hotmart_token = get_option('camisa10_hotmart_webhook_token');
-    $received_token = $_SERVER['HTTP_X_HOTMART_HOTTOK'] ?? '';
+function get_acf_number($field_name, $post_id = null, $default = 0, $type = 'int') {
+    $value = get_acf_safe($field_name, $post_id, $default);
     
-    // Token não configurado
-    if (empty($hotmart_token)) {
-        error_log('[Camisa10 Webhook] ERRO: Token não configurado no WordPress');
-        http_response_code(500);
-        exit('Webhook token not configured. Configure via: update_option("camisa10_hotmart_webhook_token", "TOKEN")');
+    if ($type === 'float') {
+        return floatval($value);
     }
     
-    // Token incorreto = possível ataque
-    if ($received_token !== $hotmart_token) {
-        error_log('[Camisa10 Webhook] ALERTA: Token inválido - possível tentativa de fraude');
-        error_log('[Camisa10 Webhook] IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
-        error_log('[Camisa10 Webhook] User-Agent: ' . ($_SERVER['HTTP_USER_AGENT'] ?? 'unknown'));
-        http_response_code(401);
-        exit('Unauthorized');
-    }
-
-    // ============================================
-    // PASSO 2: RATE LIMITING (PROTEÇÃO DoS)
-    // ============================================
-    $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-    $rate_limit_key = 'hotmart_webhook_' . md5($ip);
-    $request_count = get_transient($rate_limit_key) ?: 0;
-    
-    if ($request_count > 10) {
-        error_log('[Camisa10 Webhook] ALERTA: Rate limit excedido para IP: ' . $ip);
-        http_response_code(429);
-        exit('Too many requests');
-    }
-    
-    set_transient($rate_limit_key, $request_count + 1, 60); // 10 requests/minuto
-
-    // ============================================
-    // PASSO 3: LER E VALIDAR PAYLOAD JSON
-    // ============================================
-    $raw_data = file_get_contents('php://input');
-    $data = json_decode($raw_data, true);
-    
-    // JSON inválido
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        error_log('[Camisa10 Webhook] ERRO: JSON inválido - ' . json_last_error_msg());
-        http_response_code(400);
-        exit('Invalid JSON: ' . json_last_error_msg());
-    }
-    
-    // Estrutura obrigatória faltando
-    if (!isset($data['event']) || !isset($data['data']['buyer']) || !isset($data['data']['product'])) {
-        error_log('[Camisa10 Webhook] ERRO: Payload incompleto');
-        error_log('[Camisa10 Webhook] Payload: ' . wp_json_encode($data));
-        http_response_code(400);
-        exit('Invalid payload structure');
-    }
-
-    // ============================================
-    // PASSO 4: SANITIZAR E VALIDAR INPUTS
-    // ============================================
-    $event = sanitize_text_field($data['event']);
-    $product_id = sanitize_text_field($data['data']['product']['id'] ?? '');
-    $product_name = sanitize_text_field($data['data']['product']['name'] ?? '');
-    $buyer_email = sanitize_email($data['data']['buyer']['email'] ?? '');
-    $buyer_name = sanitize_text_field($data['data']['buyer']['name'] ?? '');
-    
-    // Validar product_id (apenas alfanuméricos e hífen)
-    if (empty($product_id) || !preg_match('/^[a-zA-Z0-9\-]+$/', $product_id)) {
-        error_log('[Camisa10 Webhook] ERRO: Product ID inválido: ' . $product_id);
-        http_response_code(400);
-        exit('Invalid product ID format');
-    }
-    
-    // Validar tamanho do product_id
-    if (strlen($product_id) > 50) {
-        error_log('[Camisa10 Webhook] ERRO: Product ID muito longo: ' . strlen($product_id) . ' chars');
-        http_response_code(400);
-        exit('Product ID too long');
-    }
-    
-    // Validar email
-    if (empty($buyer_email) || !is_email($buyer_email)) {
-        error_log('[Camisa10 Webhook] ERRO: Email inválido: ' . $buyer_email);
-        http_response_code(400);
-        exit('Invalid email address');
-    }
-    
-    // Validar nome do comprador
-    if (empty($buyer_name)) {
-        error_log('[Camisa10 Webhook] ERRO: Nome do comprador vazio');
-        http_response_code(400);
-        exit('Buyer name is required');
-    }
-
-    // Debug log (apenas em desenvolvimento)
-    if (defined('WP_DEBUG') && WP_DEBUG) {
-        error_log('[Camisa10 Webhook] Evento: ' . $event);
-        error_log('[Camisa10 Webhook] Produto: ' . $product_id . ' (' . $product_name . ')');
-        error_log('[Camisa10 Webhook] Comprador: ' . $buyer_name . ' <' . $buyer_email . '>');
-    }
-
-    // ============================================
-    // PASSO 5: PROCESSAR EVENTO
-    // ============================================
-    if ($event === 'PURCHASE_APPROVED' || $event === 'PURCHASE_COMPLETE') {
-        
-        // Buscar curso pelo product_id
-        $query = new WP_Query(array(
-            'post_type' => 'curso',
-            'post_status' => 'publish',
-            'posts_per_page' => 1,
-            'no_found_rows' => true,
-            'update_post_meta_cache' => false,
-            'meta_query' => array(
-                array(
-                    'key' => 'hotmart_product_id',
-                    'value' => $product_id,
-                    'compare' => '=',
-                    'type' => 'CHAR'
-                )
-            )
-        ));
-        
-        if (!$query->have_posts()) {
-            error_log('[Camisa10 Webhook] ERRO: Curso não encontrado para produto: ' . $product_id);
-            wp_reset_postdata();
-            http_response_code(404);
-            exit('Course not found for product: ' . $product_id);
-        }
-        
-        $curso_id = $query->posts[0]->ID;
-        wp_reset_postdata();
-        
-        // Verificar se usuário existe
-        $user = get_user_by('email', $buyer_email);
-        
-        if (!$user) {
-            // Criar usuário
-            $username = sanitize_user(strtolower(str_replace(' ', '', $buyer_name)));
-            $password = wp_generate_password(12, true);
-            
-            $user_id = wp_create_user($username, $password, $buyer_email);
-            
-            if (is_wp_error($user_id)) {
-                error_log('[Camisa10 Webhook] ERRO ao criar usuário: ' . $user_id->get_error_message());
-                http_response_code(500);
-                exit('Error creating user: ' . $user_id->get_error_message());
-            }
-            
-            // Atualizar nome do usuário
-            wp_update_user(array(
-                'ID' => $user_id,
-                'display_name' => $buyer_name,
-                'first_name' => $buyer_name
-            ));
-            
-            // Enviar credenciais por email
-            wp_new_user_notification($user_id, null, 'both');
-            
-            error_log('[Camisa10 Webhook] Novo usuário criado: ' . $user_id . ' (' . $buyer_email . ')');
-            
-        } else {
-            $user_id = $user->ID;
-            error_log('[Camisa10 Webhook] Usuário existente: ' . $user_id . ' (' . $buyer_email . ')');
-        }
-        
-        // Matricular usuário no curso
-        if (function_exists('onekorse_enroll_user')) {
-            $enrolled = onekorse_enroll_user($user_id, $curso_id);
-            
-            if (is_wp_error($enrolled)) {
-                error_log('[Camisa10 Webhook] ERRO ao matricular: ' . $enrolled->get_error_message());
-                
-                // Notificar admin
-                wp_mail(
-                    get_option('admin_email'),
-                    '[Camisa10] Falha na matrícula automática',
-                    sprintf(
-                        "Falha ao matricular usuário:\n\nUsuário ID: %d\nCurso ID: %d\nProduto Hotmart: %s\nErro: %s",
-                        $user_id,
-                        $curso_id,
-                        $product_id,
-                        $enrolled->get_error_message()
-                    )
-                );
-                
-                http_response_code(500);
-                exit('Error enrolling user: ' . $enrolled->get_error_message());
-            }
-            
-            error_log('[Camisa10 Webhook] Usuário matriculado com sucesso: User ' . $user_id . ' -> Curso ' . $curso_id);
-            
-        } else {
-            error_log('[Camisa10 Webhook] ERRO CRÍTICO: Função onekorse_enroll_user não existe!');
-            
-            // Notificar admin
-            wp_mail(
-                get_option('admin_email'),
-                '[Camisa10] ERRO CRÍTICO: Função de matrícula não encontrada',
-                sprintf(
-                    "A função onekorse_enroll_user() não existe.\n\nUsuário %d NÃO foi matriculado no curso %d.\nProduto Hotmart: %s",
-                    $user_id,
-                    $curso_id,
-                    $product_id
-                )
-            );
-            
-            http_response_code(500);
-            exit('Enrollment function not available');
-        }
-    }
-
-    // ============================================
-    // PASSO 6: RESPONDER COM SUCESSO
-    // ============================================
-    http_response_code(200);
-    echo wp_json_encode(array(
-        'status' => 'success',
-        'message' => 'Webhook processed successfully',
-        'event' => $event,
-        'timestamp' => current_time('mysql')
-    ));
-    exit;
+    return intval($value);
 }
-add_action('init', 'camisa10_hotmart_webhook_listener');
+
+/**
+ * ============================================
+ * HELPER: SAFE PRINT ARRAYS
+ * ============================================
+ */
+function safe_print($value, $separator = ', ') {
+    if (is_array($value)) {
+        if (empty($value)) {
+            return '';
+        }
+        
+        $output = array();
+        foreach ($value as $item) {
+            if (is_object($item)) {
+                if (isset($item->name)) {
+                    $output[] = esc_html($item->name);
+                } elseif (method_exists($item, '__toString')) {
+                    $output[] = esc_html((string)$item);
+                }
+            } elseif (is_scalar($item)) {
+                $output[] = esc_html($item);
+            }
+        }
+        return implode($separator, $output);
+    } elseif (is_object($value)) {
+        if (isset($value->name)) {
+            return esc_html($value->name);
+        } elseif (method_exists($value, '__toString')) {
+            return esc_html((string)$value);
+        }
+        return '';
+    } elseif (is_wp_error($value)) {
+        return '';
+    }
+    
+    return esc_html($value);
+}
 
 /**
  * ============================================
@@ -403,3 +279,100 @@ function camisa10_theme_support() {
     ));
 }
 add_action('after_setup_theme', 'camisa10_theme_support');
+
+/**
+ * ============================================
+ * HOTMART WEBHOOK (COM SEGURANÇA)
+ * ============================================
+ */
+function camisa10_hotmart_webhook_listener() {
+    // Verificar se é request do webhook
+    if (!isset($_GET['hotmart_webhook'])) {
+        return;
+    }
+
+    // VALIDAR TOKEN HOTMART (SEGURANÇA)
+    $hotmart_token = get_option('camisa10_hotmart_webhook_token');
+    $received_token = $_SERVER['HTTP_X_HOTMART_HOTTOK'] ?? '';
+
+    // Token não configurado
+    if (empty($hotmart_token)) {
+        error_log('[Camisa10 Webhook] ERRO: Token não configurado no WordPress');
+        http_response_code(500);
+        exit('Webhook token not configured');
+    }
+
+    // Token incorreto = possível ataque
+    if ($received_token !== $hotmart_token) {
+        error_log('[Camisa10 Webhook] ALERTA: Token inválido - possível tentativa de fraude');
+        error_log('[Camisa10 Webhook] IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+        http_response_code(401);
+        exit('Unauthorized');
+    }
+
+    // RATE LIMITING (PROTEÇÃO DoS)
+    $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $rate_limit_key = 'hotmart_webhook_' . md5($ip);
+    $request_count = get_transient($rate_limit_key) ?: 0;
+    
+    if ($request_count > 10) {
+        error_log('[Camisa10 Webhook] ALERTA: Rate limit excedido para IP: ' . $ip);
+        http_response_code(429);
+        exit('Too many requests');
+    }
+    
+    set_transient($rate_limit_key, $request_count + 1, 60);
+
+    // LER E VALIDAR PAYLOAD JSON
+    $raw_data = file_get_contents('php://input');
+    $data = json_decode($raw_data, true);
+
+    // JSON inválido
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        error_log('[Camisa10 Webhook] ERRO: JSON inválido - ' . json_last_error_msg());
+        http_response_code(400);
+        exit('Invalid JSON');
+    }
+
+    // Estrutura obrigatória faltando
+    if (!isset($data['event']) || !isset($data['data']['buyer']) || !isset($data['data']['product'])) {
+        error_log('[Camisa10 Webhook] ERRO: Payload incompleto');
+        http_response_code(400);
+        exit('Invalid payload structure');
+    }
+
+    // SANITIZAR E VALIDAR INPUTS
+    $event = sanitize_text_field($data['event']);
+    $product_id = sanitize_text_field($data['data']['product']['id'] ?? '');
+    $buyer_email = sanitize_email($data['data']['buyer']['email'] ?? '');
+    $buyer_name = sanitize_text_field($data['data']['buyer']['name'] ?? '');
+
+    // Validar product_id
+    if (empty($product_id) || !preg_match('/^[a-zA-Z0-9\-]+$/', $product_id)) {
+        error_log('[Camisa10 Webhook] ERRO: Product ID inválido');
+        http_response_code(400);
+        exit('Invalid product ID');
+    }
+
+    // Validar email
+    if (empty($buyer_email) || !is_email($buyer_email)) {
+        error_log('[Camisa10 Webhook] ERRO: Email inválido');
+        http_response_code(400);
+        exit('Invalid email');
+    }
+
+    // PROCESSAR EVENTO
+    if ($event === 'PURCHASE_APPROVED' || $event === 'PURCHASE_COMPLETE') {
+        // Processar compra...
+        error_log('[Camisa10 Webhook] Compra aprovada: ' . $buyer_email . ' - Produto: ' . $product_id);
+    }
+
+    // RESPONDER COM SUCESSO
+    http_response_code(200);
+    echo wp_json_encode(array(
+        'status' => 'success',
+        'timestamp' => current_time('mysql')
+    ));
+    exit;
+}
+add_action('init', 'camisa10_hotmart_webhook_listener');

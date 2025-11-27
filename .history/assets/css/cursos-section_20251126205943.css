@@ -1,0 +1,334 @@
+/**
+ * Camisa 10 - Cursos Section Component
+ * Versão: 2.0 (corrigida)
+ * 
+ * Dependências: custom-variables.css
+ */
+
+/* ========================================
+   ACCORDION DE MÓDULOS
+   ======================================== */
+
+.curso-accordion {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.accordion-item {
+  background-color: var(--color-branco);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-md);
+  overflow: hidden;
+  transition: all var(--transition-base);
+}
+
+.accordion-item:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.accordion-item.is-open {
+  box-shadow: var(--shadow-md);
+}
+
+/* Header do Accordion */
+.accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: var(--space-lg) var(--space-xl);
+  background-color: var(--color-branco);
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color var(--transition-fast);
+}
+
+.accordion-header:hover {
+  background-color: rgba(250, 243, 35, 0.1);
+}
+
+.accordion-item.is-open .accordion-header {
+  background-color: rgba(10, 59, 232, 0.05);
+}
+
+.accordion-header__content {
+  flex: 1;
+}
+
+.accordion-number {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-azul);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-xs);
+}
+
+.accordion-title {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-preto);
+  margin: 0;
+  line-height: var(--line-height-tight);
+}
+
+.accordion-header__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-preto);
+  opacity: 0.6;
+}
+
+.accordion-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  transition: transform var(--transition-base);
+}
+
+.accordion-item.is-open .accordion-icon {
+  transform: rotate(180deg);
+}
+
+/* Content do Accordion */
+.accordion-content {
+  display: none;
+  padding: 0 var(--space-xl) var(--space-xl);
+}
+
+.accordion-item.is-open .accordion-content {
+  display: block;
+}
+
+.modulo-descricao {
+  padding: var(--space-lg);
+  background-color: rgba(10, 59, 232, 0.03);
+  border-left: 3px solid var(--color-azul);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-lg);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-normal);
+}
+
+/* ========================================
+   LISTA DE AULAS
+   ======================================== */
+
+.aulas-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.aula-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  transition: background-color var(--transition-fast);
+}
+
+.aula-item:last-child {
+  border-bottom: none;
+}
+
+.aula-item:hover {
+  background-color: rgba(250, 243, 35, 0.05);
+}
+
+.aula-item--gratuita {
+  background-color: rgba(2, 251, 154, 0.05);
+}
+
+.aula-item__icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  color: var(--color-azul);
+}
+
+.aula-item__content {
+  flex: 1;
+}
+
+.aula-item__title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-preto);
+  margin: 0 0 var(--space-xs) 0;
+}
+
+.aula-badge {
+  display: inline-block;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+}
+
+.aula-badge--gratuita {
+  background-color: var(--color-verde);
+  color: var(--color-preto);
+}
+
+.aula-item__duracao {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-preto);
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+.aula-item__link {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-azul);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--transition-fast);
+}
+
+.aula-item__link:hover {
+  color: var(--color-verde);
+}
+
+/* ========================================
+   RESUMO DO CONTEÚDO
+   ======================================== */
+
+.curso-conteudo-summary {
+  margin-top: var(--space-3xl);
+  display: flex;
+  justify-content: center;
+}
+
+.summary-card {
+  width: 100%;
+  max-width: 600px;
+  padding: var(--space-2xl);
+  background: linear-gradient(
+    135deg,
+    var(--color-azul) 0%,
+    var(--color-verde) 100%
+  );
+  border-radius: var(--radius-lg);
+  color: var(--color-branco);
+  text-align: center;
+}
+
+.summary-title {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-xl);
+}
+
+.summary-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3xl);
+  flex-wrap: wrap;
+}
+
+.summary-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.summary-stat__value {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-black);
+  color: var(--color-amarelo);
+  line-height: 1;
+}
+
+.summary-stat__label {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  opacity: 0.9;
+}
+
+/* ========================================
+   RESPONSIVE - MOBILE
+   ======================================== */
+
+@media (max-width: 767px) {
+  .accordion-header {
+    padding: var(--space-md);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .accordion-header__meta {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .accordion-title {
+    font-size: var(--font-size-lg);
+  }
+
+  .accordion-content {
+    padding: 0 var(--space-md) var(--space-md);
+  }
+
+  .aula-item {
+    flex-wrap: wrap;
+  }
+
+  .aula-item__duracao,
+  .aula-item__link {
+    width: 100%;
+    margin-left: calc(32px + var(--space-md));
+  }
+
+  .summary-stats {
+    gap: var(--space-2xl);
+  }
+}
+
+/* ========================================
+   RESPONSIVE - TABLET
+   ======================================== */
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .accordion-title {
+    font-size: var(--font-size-xl);
+  }
+}
+
+/* ========================================
+   ACESSIBILIDADE
+   ======================================== */
+
+.accordion-header:focus-visible {
+  outline: 2px solid var(--color-azul);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .accordion-item,
+  .accordion-icon {
+    transition: none;
+  }
+}

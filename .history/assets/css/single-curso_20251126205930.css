@@ -1,0 +1,354 @@
+/**
+ * Camisa 10 - Single Curso Page Styles
+ * Versão: 2.0 (corrigida)
+ * 
+ * Dependências: custom-variables.css
+ */
+
+/* ========================================
+   CURSO HERO SECTION
+   ======================================== */
+
+.curso-hero {
+  position: relative;
+  min-height: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.curso-hero__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(10, 59, 232, 0.85) 0%,
+    rgba(0, 0, 0, 0.7) 100%
+  );
+  z-index: 1;
+}
+
+.curso-hero .container {
+  position: relative;
+  z-index: 2;
+}
+
+.curso-hero__content {
+  max-width: 900px;
+  color: var(--color-branco);
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  margin-bottom: var(--space-lg);
+}
+
+.breadcrumb__list {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: var(--font-size-sm);
+}
+
+.breadcrumb__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.breadcrumb__item::after {
+  content: '/';
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.breadcrumb__item:last-child::after {
+  display: none;
+}
+
+.breadcrumb__item a {
+  color: var(--color-branco);
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity var(--transition-fast);
+}
+
+.breadcrumb__item a:hover {
+  opacity: 1;
+}
+
+.breadcrumb__item--active span {
+  opacity: 0.6;
+}
+
+/* Badge */
+.curso-hero__badge {
+  margin-bottom: var(--space-md);
+}
+
+.badge {
+  display: inline-block;
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.badge--primary {
+  background-color: var(--color-amarelo);
+  color: var(--color-preto);
+}
+
+/* Categoria */
+.curso-hero__categoria {
+  margin-bottom: var(--space-md);
+}
+
+.categoria-tag {
+  display: inline-block;
+  color: var(--color-verde);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+}
+
+/* Título */
+.curso-hero__title {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-black);
+  line-height: var(--line-height-tight);
+  margin-bottom: var(--space-lg);
+}
+
+/* Excerpt */
+.curso-hero__excerpt {
+  font-size: var(--font-size-lg);
+  line-height: var(--line-height-normal);
+  margin-bottom: var(--space-xl);
+  opacity: 0.9;
+}
+
+/* Meta Info */
+.curso-hero__meta {
+  margin-bottom: var(--space-xl);
+}
+
+.meta-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-lg);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-base);
+}
+
+.meta-icon {
+  flex-shrink: 0;
+}
+
+/* CTA */
+.curso-hero__cta {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+/* Scroll Indicator */
+.curso-hero__scroll-indicator {
+  position: absolute;
+  bottom: var(--space-xl);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.scroll-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  color: var(--color-branco);
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* ========================================
+   CURSO INFOS RÁPIDAS
+   ======================================== */
+
+.curso-infos-rapidas {
+  padding: var(--space-4xl) 0;
+  background-color: var(--color-branco);
+}
+
+.infos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--space-xl);
+  margin-bottom: var(--space-3xl);
+}
+
+.info-card {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-xl);
+  background-color: var(--color-branco);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+}
+
+.info-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-4px);
+}
+
+.info-card__icon {
+  flex-shrink: 0;
+}
+
+.info-card__content {
+  flex: 1;
+}
+
+.info-card__title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-preto);
+  opacity: 0.6;
+  margin-bottom: var(--space-xs);
+  text-transform: uppercase;
+}
+
+.info-card__value {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-azul);
+}
+
+/* Instrutor Card */
+.curso-instrutor {
+  margin-top: var(--space-2xl);
+}
+
+.instrutor-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding: var(--space-xl);
+  background: linear-gradient(135deg, var(--color-azul) 0%, var(--color-verde) 100%);
+  border-radius: var(--radius-lg);
+  color: var(--color-branco);
+}
+
+.instrutor-card__foto {
+  flex-shrink: 0;
+}
+
+.instrutor-card__foto img {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  border: 3px solid var(--color-branco);
+  object-fit: cover;
+}
+
+.instrutor-card__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  opacity: 0.8;
+  margin-bottom: var(--space-xs);
+  text-transform: uppercase;
+}
+
+.instrutor-card__nome {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-sm);
+}
+
+.instrutor-card__bio {
+  font-size: var(--font-size-base);
+  opacity: 0.9;
+  line-height: var(--line-height-normal);
+}
+
+/* ========================================
+   RESPONSIVE - MOBILE
+   ======================================== */
+
+@media (max-width: 767px) {
+  .curso-hero {
+    min-height: 400px;
+  }
+
+  .curso-hero__title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .curso-hero__excerpt {
+    font-size: var(--font-size-base);
+  }
+
+  .meta-list {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
+
+  .infos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .instrutor-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}
+
+/* ========================================
+   RESPONSIVE - DESKTOP
+   ======================================== */
+
+@media (min-width: 1024px) {
+  .curso-hero {
+    min-height: 600px;
+  }
+
+  .curso-hero__title {
+    font-size: var(--font-size-4xl);
+  }
+}

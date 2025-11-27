@@ -1,0 +1,121 @@
+/**
+ * Camisa 10 - Variáveis CSS Centralizadas
+ * Baseado em: Guia Marca Camisa 10 V1.13.2 + cores_marca.csv
+ * Versão: 2.0 (corrigida)
+ */
+
+:root {
+  /* ========================================
+     CORES PRIMÁRIAS (cores_marca.csv)
+     ======================================== */
+  --color-amarelo: #FAF323;
+  --color-azul: #0A3BE8;
+  --color-verde: #02FB9A;
+  --color-branco: #FFFFFF;
+  --color-preto: #000000;
+
+  /* Aliases semânticos */
+  --primary-color: var(--color-amarelo);
+  --secondary-color: var(--color-azul);
+  --accent-color: var(--color-verde);
+  --bg-color: var(--color-branco);
+  --text-color: var(--color-preto);
+
+  /* Estados de cor */
+  --primary-hover: #E8E01F;
+  --secondary-hover: #0832C4;
+  --accent-hover: #01D982;
+
+  /* ========================================
+     TIPOGRAFIA (tipografia.csv)
+     ======================================== */
+  --font-primary: 'Chillax Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-secondary: 'Gill Sans Nova', Georgia, serif;
+  --font-mono: 'Courier New', monospace;
+
+  /* Escala tipográfica (1.25 - Major Third) */
+  --font-size-xs: 0.64rem;    /* 10.24px */
+  --font-size-sm: 0.8rem;     /* 12.8px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-md: 1.25rem;    /* 20px */
+  --font-size-lg: 1.563rem;   /* 25px */
+  --font-size-xl: 1.953rem;   /* 31.25px */
+  --font-size-2xl: 2.441rem;  /* 39.06px */
+  --font-size-3xl: 3.052rem;  /* 48.83px */
+  --font-size-4xl: 3.815rem;  /* 61.04px */
+
+  /* Pesos (conforme guia) */
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+  --font-weight-black: 900;
+
+  /* Line heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.8;
+
+  /* ========================================
+     BREAKPOINTS UNIFICADOS
+     ======================================== */
+  --breakpoint-mobile: 320px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1024px;
+  --breakpoint-wide: 1440px;
+
+  /* ========================================
+     ESPAÇAMENTO (Sistema 8pt)
+     ======================================== */
+  --space-xs: 0.25rem;    /* 4px */
+  --space-sm: 0.5rem;     /* 8px */
+  --space-md: 1rem;       /* 16px */
+  --space-lg: 1.5rem;     /* 24px */
+  --space-xl: 2rem;       /* 32px */
+  --space-2xl: 3rem;      /* 48px */
+  --space-3xl: 4rem;      /* 64px */
+  --space-4xl: 6rem;      /* 96px */
+
+  /* ========================================
+     SOMBRAS
+     ======================================== */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+
+  /* ========================================
+     BORDER RADIUS
+     ======================================== */
+  --radius-sm: 0.25rem;   /* 4px */
+  --radius-md: 0.5rem;    /* 8px */
+  --radius-lg: 1rem;      /* 16px */
+  --radius-full: 9999px;
+
+  /* ========================================
+     TRANSIÇÕES
+     ======================================== */
+  --transition-fast: 150ms ease-in-out;
+  --transition-base: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+
+  /* ========================================
+     Z-INDEX HIERARQUIA
+     ======================================== */
+  --z-base: 1;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+}
+
+/* ========================================
+   DARK MODE (futuro)
+   ======================================== */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: var(--color-preto);
+    --text-color: var(--color-branco);
+  }
+}

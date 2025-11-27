@@ -1,0 +1,400 @@
+/**
+ * Camisa 10 - Home Page Styles
+ * Versão: 2.0 (corrigida)
+ * 
+ * Dependências: custom-variables.css
+ */
+
+/* ========================================
+   SOBRE SECTION
+   ======================================== */
+
+.sobre-section {
+  padding: var(--space-4xl) 0;
+  background-color: var(--color-branco);
+}
+
+.sobre-section .container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+.sobre-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+  align-items: center;
+}
+
+.sobre-content h2 {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-black);
+  color: var(--color-azul);
+  margin-bottom: var(--space-lg);
+  line-height: var(--line-height-tight);
+}
+
+.sobre-content p {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-lg);
+  color: var(--color-preto);
+  line-height: var(--line-height-normal);
+  margin-bottom: var(--space-md);
+}
+
+.sobre-content .btn {
+  margin-top: var(--space-xl);
+}
+
+.sobre-image {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.sobre-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ========================================
+   CURSOS SECTION
+   ======================================== */
+
+.cursos-section {
+  padding: var(--space-4xl) 0;
+  background: linear-gradient(
+    180deg,
+    var(--color-branco) 0%,
+    rgba(250, 243, 35, 0.05) 100%
+  );
+}
+
+.section-header {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto var(--space-3xl);
+}
+
+.section-title {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-black);
+  color: var(--color-azul);
+  margin-bottom: var(--space-md);
+}
+
+.section-subtitle {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-lg);
+  color: var(--color-preto);
+  opacity: 0.8;
+}
+
+.cursos-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-2xl);
+}
+
+/* Curso Card */
+.curso-card {
+  background-color: var(--color-branco);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.curso-card.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.curso-card:hover {
+  box-shadow: var(--shadow-xl);
+  transform: translateY(-8px);
+}
+
+.curso-card__image {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  background-color: var(--color-preto);
+}
+
+.curso-card__image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.curso-card:hover .curso-card__image img {
+  transform: scale(1.1);
+}
+
+.curso-card__badge {
+  position: absolute;
+  top: var(--space-md);
+  right: var(--space-md);
+  background-color: var(--color-amarelo);
+  color: var(--color-preto);
+  padding: var(--space-xs) var(--space-md);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+}
+
+.curso-card__content {
+  padding: var(--space-xl);
+}
+
+.curso-card__categoria {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-azul);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-sm);
+}
+
+.curso-card__title {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-preto);
+  margin-bottom: var(--space-md);
+  line-height: var(--line-height-tight);
+}
+
+.curso-card__excerpt {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-base);
+  color: var(--color-preto);
+  opacity: 0.7;
+  margin-bottom: var(--space-lg);
+  line-height: var(--line-height-normal);
+}
+
+.curso-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding-top: var(--space-md);
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  font-size: var(--font-size-sm);
+  color: var(--color-preto);
+  opacity: 0.6;
+}
+
+.curso-card__meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.curso-card__meta svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Load More Button */
+.cursos-load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--space-2xl);
+}
+
+.cursos-load-more .btn {
+  min-width: 200px;
+}
+
+.cursos-load-more .btn.is-loading {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* ========================================
+   STATS/NÚMEROS SECTION
+   ======================================== */
+
+.stats-section {
+  padding: var(--space-4xl) 0;
+  background: linear-gradient(
+    135deg,
+    var(--color-azul) 0%,
+    var(--color-verde) 100%
+  );
+  color: var(--color-branco);
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2xl);
+  text-align: center;
+}
+
+.stat-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all var(--transition-base);
+}
+
+.stat-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.stat-number {
+  display: block;
+  font-family: var(--font-primary);
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-black);
+  color: var(--color-amarelo);
+  margin-bottom: var(--space-sm);
+  line-height: 1;
+}
+
+.stat-label {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-branco);
+}
+
+/* ========================================
+   CTA SECTION
+   ======================================== */
+
+.cta-section {
+  padding: var(--space-4xl) 0;
+  background-color: var(--color-amarelo);
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-black);
+  color: var(--color-preto);
+  margin-bottom: var(--space-lg);
+}
+
+.cta-section p {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-lg);
+  color: var(--color-preto);
+  margin-bottom: var(--space-xl);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ========================================
+   SCROLL TO TOP BUTTON
+   ======================================== */
+
+.scroll-to-top {
+  position: fixed;
+  bottom: var(--space-xl);
+  right: var(--space-xl);
+  width: 48px;
+  height: 48px;
+  background-color: var(--color-azul);
+  color: var(--color-branco);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px);
+  transition: all var(--transition-base);
+  z-index: var(--z-fixed);
+}
+
+.scroll-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.scroll-to-top:hover {
+  background-color: var(--color-amarelo);
+  color: var(--color-preto);
+  transform: translateY(-4px);
+}
+
+.scroll-to-top svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ========================================
+   RESPONSIVE - TABLET (768px+)
+   ======================================== */
+
+@media (min-width: 768px) {
+  .sobre-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cursos-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ========================================
+   RESPONSIVE - DESKTOP (1024px+)
+   ======================================== */
+
+@media (min-width: 1024px) {
+  .cursos-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .sobre-content h2 {
+    font-size: var(--font-size-4xl);
+  }
+
+  .section-title {
+    font-size: var(--font-size-4xl);
+  }
+}
+
+/* ========================================
+   ACESSIBILIDADE
+   ======================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .curso-card,
+  .stat-item {
+    transition: none;
+    animation: none;
+  }
+
+  .curso-card:hover {
+    transform: none;
+  }
+}
