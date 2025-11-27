@@ -696,27 +696,3 @@
         grid-template-columns: 1fr;
     }
 }
-
-
-/* ============================================
-   ANIMAÇÕES
-   ============================================ */
-.fade-in-element {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-}
-
-.fade-in-visible {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* Sticky sidebar transition */
-.curso-infos-rapidas {
-    transition: all 0.3s ease;
-}
-
-.curso-infos-rapidas.is-sticky {
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-}

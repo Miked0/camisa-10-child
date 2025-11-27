@@ -2,7 +2,7 @@
 /**
  * Camisa 10 Child Theme - Functions
  * @package Camisa10
- * @version 6.0.0 - CORRIGIDO
+ * @version 8.2.0 - SINGLE CURSO CORRIGIDO
  */
 
 // Prevenir acesso direto
@@ -38,7 +38,7 @@ function camisa10_home_assets() {
         return;
     }
 
-    // 1. BOOTSTRAP CSS (PRIMEIRO - ANTES DE TUDO)
+    // 1. BOOTSTRAP CSS
     if (!wp_style_is('bootstrap', 'enqueued')) {
         wp_enqueue_style(
             'bootstrap',
@@ -48,7 +48,7 @@ function camisa10_home_assets() {
         );
     }
 
-    // 2. CSS VARIABLES (DESIGN SYSTEM)
+    // 2. CSS VARIABLES
     wp_enqueue_style(
         'camisa10-variables',
         get_stylesheet_directory_uri() . '/assets/css/custom-variables.css',
@@ -72,7 +72,7 @@ function camisa10_home_assets() {
         filemtime(get_stylesheet_directory() . '/assets/css/custom-home.css')
     );
 
-    // 5. SLICK SLIDER CSS (OPCIONAL)
+    // 5. SLICK SLIDER CSS
     wp_enqueue_style(
         'slick-css',
         'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css',
@@ -80,7 +80,7 @@ function camisa10_home_assets() {
         '1.8.1'
     );
 
-    // 6. BOOTSTRAP JS (COM JQUERY)
+    // 6. BOOTSTRAP JS
     if (!wp_script_is('bootstrap', 'enqueued')) {
         wp_enqueue_script(
             'bootstrap',
@@ -122,20 +122,73 @@ add_action('wp_enqueue_scripts', 'camisa10_home_assets', 20);
 
 /**
  * ============================================
+ * ASSETS DO SINGLE CURSO - CORRIGIDO
+ * ============================================
+ */
+
+add_action('wp_enqueue_scripts', 'camisa10_single_curso_assets', 30);
+
+/**
+ * CSS FALLBACK se arquivo não existir
+ */
+function camisa10_curso_fallback_css() {
+    ?>
+    <style>
+        /* CSS BÁSICO TEMPORÁRIO */
+        .single-curso-container { width: 100%; background: #FCFCF9; }
+        .curso-hero-section { background: linear-gradient(135deg, #0A3BE8 0%, #061F98 100%); padding: 120px 24px 80px 24px; color: #FFFFFF; }
+        .curso-hero-content { max-width: 1320px; margin: 0 auto; }
+        .curso-titulo { font-size: 3rem; font-weight: 800; color: #FFFFFF; margin: 24px 0; }
+        .curso-conteudo-section { padding: 80px 24px; }
+        .curso-container { max-width: 1320px; margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 48px; }
+        .curso-infos-rapidas { position: sticky; top: 100px; background: #FFFFFF; border-radius: 16px; padding: 32px 24px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); }
+        .curso-btn-comprar { width: 100%; padding: 18px 24px; background: #0A3BE8; color: #FFFFFF; font-weight: 700; text-align: center; border-radius: 8px; text-decoration: none; display: block; margin-bottom: 12px; }
+        .curso-btn-comprar:hover { background: #0831C8; }
+        @media (max-width: 1024px) { .curso-container { grid-template-columns: 1fr; } .curso-infos-rapidas { position: static; } }
+    </style>
+    <?php
+}
+
+/**
+ * ============================================
  * CORREÇÃO: ERRO DEPRECATED DO AVATAR
  * ============================================
  */
+function camisa10_single_curso_assets() {
+    if (!is_singular('curso')) {
+        return;
+    }
+
+    // FORÇAR RELOAD COM TIMESTAMP
+    $timestamp = time();
+
+    if (!wp_style_is('bootstrap', 'enqueued')) {
+        wp_enqueue_style('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css', array(), '5.3.0');
+    }
+
+    wp_enqueue_style('camisa10-variables', get_stylesheet_directory_uri() . '/assets/css/custom-variables.css?v=' . $timestamp, array('bootstrap'));
+    
+    wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css', array(), '6.4.0');
+    
+    // CSS COM TIMESTAMP
+    wp_enqueue_style('camisa10-curso-css', get_stylesheet_directory_uri() . '/assets/css/single-curso.css?v=' . $timestamp, array('camisa10-variables', 'font-awesome'));
+
+    if (!wp_script_is('bootstrap', 'enqueued')) {
+        wp_enqueue_script('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js', array('jquery'), '5.3.0', true);
+    }
+
+    // JS COM TIMESTAMP
+    wp_enqueue_script('camisa10-curso-js', get_stylesheet_directory_uri() . '/assets/js/single-curso.js?v=' . $timestamp, array('jquery', 'bootstrap'), null, true);
+}
+add_action('wp_enqueue_scripts', 'camisa10_single_curso_assets', 30);
 function camisa10_fix_avatar_deprecated($avatar, $id_or_email, $size, $default, $alt, $args) {
-    // Prevenir erro quando $args['url'] é null
     if (isset($args['url']) && $args['url'] === null) {
         $args['url'] = '';
     }
     
-    // Se avatar vazio, retornar padrão
     if (empty($avatar)) {
         $default_avatar = get_stylesheet_directory_uri() . '/assets/images/avatar-default.png';
         
-        // Verificar se arquivo existe
         if (!file_exists(get_stylesheet_directory() . '/assets/images/avatar-default.png')) {
             $default_avatar = get_avatar_url($id_or_email, array('default' => 'mystery'));
         }
@@ -159,19 +212,15 @@ function get_acf_safe($field_name, $post_id = null, $default = '') {
     
     $value = get_field($field_name, $post_id);
     
-    // Se for array (select, taxonomy, relationship)
     if (is_array($value)) {
-        // ACF Select com return format 'array'
         if (isset($value['value'])) {
             return $value['value'];
         }
         
-        // ACF Select com return format 'label'
         if (isset($value['label'])) {
             return $value['label'];
         }
         
-        // Taxonomy ou relationship - pegar primeiro termo
         if (!empty($value)) {
             $first = reset($value);
             if (is_object($first) && isset($first->name)) {
@@ -183,12 +232,10 @@ function get_acf_safe($field_name, $post_id = null, $default = '') {
         return $default;
     }
     
-    // Se for WP_Error
     if (is_wp_error($value)) {
         return $default;
     }
     
-    // Se for vazio
     if (empty($value)) {
         return $default;
     }
@@ -196,9 +243,6 @@ function get_acf_safe($field_name, $post_id = null, $default = '') {
     return $value;
 }
 
-/**
- * Helper para pegar número ACF com segurança
- */
 function get_acf_number($field_name, $post_id = null, $default = 0, $type = 'int') {
     $value = get_acf_safe($field_name, $post_id, $default);
     
@@ -282,97 +326,121 @@ add_action('after_setup_theme', 'camisa10_theme_support');
 
 /**
  * ============================================
- * HOTMART WEBHOOK (COM SEGURANÇA)
+ * HOTMART WEBHOOK
  * ============================================
  */
 function camisa10_hotmart_webhook_listener() {
-    // Verificar se é request do webhook
     if (!isset($_GET['hotmart_webhook'])) {
         return;
     }
 
-    // VALIDAR TOKEN HOTMART (SEGURANÇA)
     $hotmart_token = get_option('camisa10_hotmart_webhook_token');
     $received_token = $_SERVER['HTTP_X_HOTMART_HOTTOK'] ?? '';
 
-    // Token não configurado
     if (empty($hotmart_token)) {
-        error_log('[Camisa10 Webhook] ERRO: Token não configurado no WordPress');
+        error_log('[Camisa10 Webhook] ERRO: Token não configurado');
         http_response_code(500);
         exit('Webhook token not configured');
     }
 
-    // Token incorreto = possível ataque
     if ($received_token !== $hotmart_token) {
-        error_log('[Camisa10 Webhook] ALERTA: Token inválido - possível tentativa de fraude');
-        error_log('[Camisa10 Webhook] IP: ' . ($_SERVER['REMOTE_ADDR'] ?? 'unknown'));
+        error_log('[Camisa10 Webhook] ALERTA: Token inválido');
         http_response_code(401);
         exit('Unauthorized');
     }
 
-    // RATE LIMITING (PROTEÇÃO DoS)
     $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
     $rate_limit_key = 'hotmart_webhook_' . md5($ip);
     $request_count = get_transient($rate_limit_key) ?: 0;
     
     if ($request_count > 10) {
-        error_log('[Camisa10 Webhook] ALERTA: Rate limit excedido para IP: ' . $ip);
         http_response_code(429);
         exit('Too many requests');
     }
     
     set_transient($rate_limit_key, $request_count + 1, 60);
 
-    // LER E VALIDAR PAYLOAD JSON
     $raw_data = file_get_contents('php://input');
     $data = json_decode($raw_data, true);
 
-    // JSON inválido
     if (json_last_error() !== JSON_ERROR_NONE) {
-        error_log('[Camisa10 Webhook] ERRO: JSON inválido - ' . json_last_error_msg());
         http_response_code(400);
         exit('Invalid JSON');
     }
 
-    // Estrutura obrigatória faltando
-    if (!isset($data['event']) || !isset($data['data']['buyer']) || !isset($data['data']['product'])) {
-        error_log('[Camisa10 Webhook] ERRO: Payload incompleto');
+    if (!isset($data['event'])) {
         http_response_code(400);
-        exit('Invalid payload structure');
+        exit('Invalid payload');
     }
 
-    // SANITIZAR E VALIDAR INPUTS
     $event = sanitize_text_field($data['event']);
-    $product_id = sanitize_text_field($data['data']['product']['id'] ?? '');
-    $buyer_email = sanitize_email($data['data']['buyer']['email'] ?? '');
-    $buyer_name = sanitize_text_field($data['data']['buyer']['name'] ?? '');
-
-    // Validar product_id
-    if (empty($product_id) || !preg_match('/^[a-zA-Z0-9\-]+$/', $product_id)) {
-        error_log('[Camisa10 Webhook] ERRO: Product ID inválido');
-        http_response_code(400);
-        exit('Invalid product ID');
-    }
-
-    // Validar email
-    if (empty($buyer_email) || !is_email($buyer_email)) {
-        error_log('[Camisa10 Webhook] ERRO: Email inválido');
-        http_response_code(400);
-        exit('Invalid email');
-    }
-
-    // PROCESSAR EVENTO
+    
     if ($event === 'PURCHASE_APPROVED' || $event === 'PURCHASE_COMPLETE') {
-        // Processar compra...
-        error_log('[Camisa10 Webhook] Compra aprovada: ' . $buyer_email . ' - Produto: ' . $product_id);
+        error_log('[Camisa10 Webhook] Compra aprovada');
     }
 
-    // RESPONDER COM SUCESSO
     http_response_code(200);
-    echo wp_json_encode(array(
-        'status' => 'success',
-        'timestamp' => current_time('mysql')
-    ));
+    echo wp_json_encode(array('status' => 'success'));
     exit;
 }
 add_action('init', 'camisa10_hotmart_webhook_listener');
+
+/**
+ * ============================================
+ * REGISTRAR POST TYPE 'CURSO'
+ * ============================================
+ */
+function camisa10_register_curso_post_type() {
+    $labels = array(
+        'name' => 'Cursos',
+        'singular_name' => 'Curso',
+        'menu_name' => 'Cursos',
+        'add_new' => 'Adicionar Novo',
+        'add_new_item' => 'Adicionar Novo Curso',
+        'edit_item' => 'Editar Curso',
+        'new_item' => 'Novo Curso',
+        'view_item' => 'Ver Curso',
+        'search_items' => 'Buscar Cursos',
+        'not_found' => 'Nenhum curso encontrado',
+        'not_found_in_trash' => 'Nenhum curso na lixeira',
+    );
+
+    $args = array(
+        'labels' => $labels,
+        'public' => true,
+        'has_archive' => true,
+        'publicly_queryable' => true,
+        'show_ui' => true,
+        'show_in_menu' => true,
+        'query_var' => true,
+        'rewrite' => array('slug' => 'curso'),
+        'capability_type' => 'post',
+        'hierarchical' => false,
+        'menu_position' => 5,
+        'menu_icon' => 'dashicons-welcome-learn-more',
+        'supports' => array('title', 'editor', 'thumbnail', 'excerpt', 'custom-fields'),
+        'show_in_rest' => true,
+    );
+
+    register_post_type('curso', $args);
+}
+add_action('init', 'camisa10_register_curso_post_type');
+
+/**
+ * Registrar Taxonomia
+ */
+function camisa10_register_curso_taxonomies() {
+    register_taxonomy('course_category', 'curso', array(
+        'labels' => array(
+            'name' => 'Categorias de Curso',
+            'singular_name' => 'Categoria de Curso',
+        ),
+        'hierarchical' => true,
+        'show_ui' => true,
+        'show_admin_column' => true,
+        'query_var' => true,
+        'rewrite' => array('slug' => 'categoria-curso'),
+        'show_in_rest' => true,
+    ));
+}
+add_action('init', 'camisa10_register_curso_taxonomies');

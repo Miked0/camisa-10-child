@@ -12,9 +12,6 @@ if (!defined('ABSPATH')) {
 get_header();
 ?>
 
-<!-- CSS INLINE TEMPORÁRIO -->
-<link rel="stylesheet" href="<?php echo get_stylesheet_directory_uri(); ?>/assets/css/single-curso.css?v=<?php echo time(); ?>">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <!-- Single Curso Container -->
 <main class="single-curso-container">
     <?php
