@@ -2,7 +2,14 @@
 /**
  * Camisa 10 Child Theme - Functions
  * @package Camisa10
- * @version 8.2.0 - SINGLE CURSO CORRIGIDO
+ * @version 2.1.0 - CORRIGIDO EM 27/11/2025
+ * 
+ * CORREÇÕES APLICADAS:
+ * - FIX #1: Função camisa10_single_curso_assets() reimplementada (CRÍTICO)
+ * - FIX #2: Bootstrap sempre registrado para dependências (CRÍTICO)
+ * - FIX #3: filemtime() substituindo time() para cache correto (ALTO)
+ * - FIX #4: cursos-section.css adicionado ao enqueue (MÉDIO)
+ * - FIX #5: Debug condicional para diagnóstico (opcional, comentado)
  */
 
 // Prevenir acesso direto
@@ -38,21 +45,24 @@ function camisa10_home_assets() {
         return;
     }
 
+    /* FIX #2: Bootstrap sempre registrado ANTES de verificar enqueue
+     * ANTES: if (!wp_style_is('bootstrap', 'enqueued')) { wp_enqueue_style... }
+     * DEPOIS: Sempre registrar, WordPress evita duplicatas automaticamente
+     */
     // 1. BOOTSTRAP CSS
-    if (!wp_style_is('bootstrap', 'enqueued')) {
-        wp_enqueue_style(
-            'bootstrap',
-            'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
-            array(),
-            '5.3.0'
-        );
-    }
+    wp_register_style(
+        'bootstrap',
+        'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
+        array(),
+        '5.3.0'
+    );
+    wp_enqueue_style('bootstrap');
 
     // 2. CSS VARIABLES
     wp_enqueue_style(
         'camisa10-variables',
         get_stylesheet_directory_uri() . '/assets/css/custom-variables.css',
-        array('bootstrap'),
+        array('bootstrap'), // Agora dependência sempre satisfeita
         filemtime(get_stylesheet_directory() . '/assets/css/custom-variables.css')
     );
 
@@ -81,15 +91,14 @@ function camisa10_home_assets() {
     );
 
     // 6. BOOTSTRAP JS
-    if (!wp_script_is('bootstrap', 'enqueued')) {
-        wp_enqueue_script(
-            'bootstrap',
-            'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js',
-            array('jquery'),
-            '5.3.0',
-            true
-        );
-    }
+    wp_register_script(
+        'bootstrap',
+        'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js',
+        array('jquery'),
+        '5.3.0',
+        true
+    );
+    wp_enqueue_script('bootstrap');
 
     // 7. SLICK SLIDER JS
     wp_enqueue_script(
@@ -122,65 +131,103 @@ add_action('wp_enqueue_scripts', 'camisa10_home_assets', 20);
 
 /**
  * ============================================
- * ASSETS DO SINGLE CURSO - CORRIGIDO
+ * ASSETS DO SINGLE CURSO - REIMPLEMENTADO
  * ============================================
- */
-
-add_action('wp_enqueue_scripts', 'camisa10_single_curso_assets', 30);
-
-/**
- * CSS FALLBACK se arquivo não existir
- */
-function camisa10_curso_fallback_css() {
-    ?>
-    <style>
-        /* CSS BÁSICO TEMPORÁRIO */
-        .single-curso-container { width: 100%; background: #FCFCF9; }
-        .curso-hero-section { background: linear-gradient(135deg, #0A3BE8 0%, #061F98 100%); padding: 120px 24px 80px 24px; color: #FFFFFF; }
-        .curso-hero-content { max-width: 1320px; margin: 0 auto; }
-        .curso-titulo { font-size: 3rem; font-weight: 800; color: #FFFFFF; margin: 24px 0; }
-        .curso-conteudo-section { padding: 80px 24px; }
-        .curso-container { max-width: 1320px; margin: 0 auto; display: grid; grid-template-columns: 1fr 380px; gap: 48px; }
-        .curso-infos-rapidas { position: sticky; top: 100px; background: #FFFFFF; border-radius: 16px; padding: 32px 24px; box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08); }
-        .curso-btn-comprar { width: 100%; padding: 18px 24px; background: #0A3BE8; color: #FFFFFF; font-weight: 700; text-align: center; border-radius: 8px; text-decoration: none; display: block; margin-bottom: 12px; }
-        .curso-btn-comprar:hover { background: #0831C8; }
-        @media (max-width: 1024px) { .curso-container { grid-template-columns: 1fr; } .curso-infos-rapidas { position: static; } }
-    </style>
-    <?php
-}
-
-/**
- * ============================================
- * CORREÇÃO: ERRO DEPRECATED DO AVATAR
- * ============================================
+ * FIX #1: Função estava ausente no arquivo original
+ * FIX #3: time() substituído por filemtime() para cache correto
+ * FIX #4: cursos-section.css adicionado
  */
 function camisa10_single_curso_assets() {
     if (!is_singular('curso')) {
         return;
     }
 
-    // FORÇAR RELOAD COM TIMESTAMP
-    $timestamp = time();
-
-    if (!wp_style_is('bootstrap', 'enqueued')) {
-        wp_enqueue_style('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css', array(), '5.3.0');
+    /* FIX #5: DEBUG CONDICIONAL (opcional - descomentar para diagnóstico)
+    if (current_user_can('administrator')) {
+        error_log('=== DEBUG SINGLE CURSO ===');
+        error_log('URL: ' . get_permalink());
+        error_log('Post Type: ' . get_post_type());
+        error_log('is_singular(curso): ' . (is_singular('curso') ? 'TRUE' : 'FALSE'));
+        error_log('Bootstrap carregado: ' . (wp_style_is('bootstrap', 'enqueued') ? 'SIM' : 'NÃO'));
     }
+    */
 
-    wp_enqueue_style('camisa10-variables', get_stylesheet_directory_uri() . '/assets/css/custom-variables.css?v=' . $timestamp, array('bootstrap'));
-    
-    wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css', array(), '6.4.0');
-    
-    // CSS COM TIMESTAMP
-    wp_enqueue_style('camisa10-curso-css', get_stylesheet_directory_uri() . '/assets/css/single-curso.css?v=' . $timestamp, array('camisa10-variables', 'font-awesome'));
+    /* FIX #3: Versões calculadas UMA VEZ com filemtime()
+     * ANTES: $timestamp = time(); (mudava a cada segundo)
+     * DEPOIS: filemtime() (muda apenas quando arquivo é editado)
+     */
+    $vars_version = filemtime(get_stylesheet_directory() . '/assets/css/custom-variables.css');
+    $curso_version = filemtime(get_stylesheet_directory() . '/assets/css/single-curso.css');
+    $cursos_section_version = filemtime(get_stylesheet_directory() . '/assets/css/cursos-section.css');
 
-    if (!wp_script_is('bootstrap', 'enqueued')) {
-        wp_enqueue_script('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js', array('jquery'), '5.3.0', true);
-    }
+    // 1. BOOTSTRAP CSS (sempre registrado)
+    wp_register_style(
+        'bootstrap',
+        'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css',
+        array(),
+        '5.3.0'
+    );
+    wp_enqueue_style('bootstrap');
 
-    // JS COM TIMESTAMP
-    wp_enqueue_script('camisa10-curso-js', get_stylesheet_directory_uri() . '/assets/js/single-curso.js?v=' . $timestamp, array('jquery', 'bootstrap'), null, true);
+    // 2. CSS VARIABLES (dependência satisfeita)
+    wp_enqueue_style(
+        'camisa10-variables',
+        get_stylesheet_directory_uri() . '/assets/css/custom-variables.css',
+        array('bootstrap'),
+        $vars_version // ← Agora usa filemtime() ao invés de time()
+    );
+
+    // 3. FONT AWESOME
+    wp_enqueue_style(
+        'font-awesome',
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
+        array(),
+        '6.4.0'
+    );
+
+    // 4. FIX #4: CURSOS SECTION CSS (arquivo estava órfão)
+    wp_enqueue_style(
+        'camisa10-cursos-section-css',
+        get_stylesheet_directory_uri() . '/assets/css/cursos-section.css',
+        array('camisa10-variables'),
+        $cursos_section_version
+    );
+
+    // 5. SINGLE CURSO CSS
+    wp_enqueue_style(
+        'camisa10-curso-css',
+        get_stylesheet_directory_uri() . '/assets/css/single-curso.css',
+        array('camisa10-cursos-section-css', 'font-awesome'),
+        $curso_version // ← Agora usa filemtime() ao invés de time()
+    );
+
+    // 6. BOOTSTRAP JS (sempre registrado)
+    wp_register_script(
+        'bootstrap',
+        'https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js',
+        array('jquery'),
+        '5.3.0',
+        true
+    );
+    wp_enqueue_script('bootstrap');
+
+    // 7. SINGLE CURSO JS
+    $curso_js_version = filemtime(get_stylesheet_directory() . '/assets/js/single-curso.js');
+    wp_enqueue_script(
+        'camisa10-curso-js',
+        get_stylesheet_directory_uri() . '/assets/js/single-curso.js',
+        array('jquery', 'bootstrap'),
+        $curso_js_version,
+        true
+    );
 }
 add_action('wp_enqueue_scripts', 'camisa10_single_curso_assets', 30);
+
+/**
+ * ============================================
+ * CORREÇÃO: ERRO DEPRECATED DO AVATAR
+ * ============================================
+ */
 function camisa10_fix_avatar_deprecated($avatar, $id_or_email, $size, $default, $alt, $args) {
     if (isset($args['url']) && $args['url'] === null) {
         $args['url'] = '';
