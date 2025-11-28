@@ -1,47 +1,61 @@
-// ========================================
-// HEADER CAMISA 10 - JAVASCRIPT
-// ========================================
+/**
+ * Header JavaScript - Camisa 10
+ * Controla comportamento do header fixo e menu mobile
+ * 
+ * @package OneKorse Child
+ * @since 1.0.0
+ * @updated 2025-11-26 - Corrigido: Throttle implementado para scroll
+ */
 
 document.addEventListener('DOMContentLoaded', function() {
     
-    // ============ VARIÁVEIS ============
+    // Throttle - Limita execução de função
+    const throttle = (func, limit) => {
+        let inThrottle;
+        return function() {
+            const args = arguments;
+            const context = this;
+            if (!inThrottle) {
+                func.apply(context, args);
+                inThrottle = true;
+                setTimeout(() => inThrottle = false, limit);
+            }
+        };
+    };
+    
+    // Variáveis
     const header = document.querySelector('.site-header');
     const mobileToggle = document.querySelector('.mobile-menu-toggle');
     const mobileNav = document.querySelector('.mobile-nav');
     const body = document.body;
     
-    // ============ SCROLL EFFECT ============
+    // Scroll effect com throttle
     let lastScroll = 0;
     
-    window.addEventListener('scroll', function() {
+    const handleScroll = function() {
         const currentScroll = window.pageYOffset;
         
-        // Adiciona classe quando scrollar
         if (currentScroll > 50) {
             header.classList.add('scrolled');
         } else {
             header.classList.remove('scrolled');
         }
         
-        // Hide/Show header ao scrollar (OPCIONAL - descomente para ativar)
-        /*
-        if (currentScroll > lastScroll && currentScroll > 100) {
-            header.style.transform = 'translateY(-100%)';
-        } else {
-            header.style.transform = 'translateY(0)';
-        }
-        */
-        
         lastScroll = currentScroll;
-    });
+    };
     
-    // ============ MOBILE MENU TOGGLE ============
+    // Aplicar throttle (60fps = ~16ms)
+    window.addEventListener('scroll', throttle(handleScroll, 16));
+    
+    // Mobile menu toggle
     if (mobileToggle && mobileNav) {
-        mobileToggle.addEventListener('click', function() {
-            this.classList.toggle('active');
+        const toggleMobileMenu = function() {
+            mobileToggle.classList.toggle('active');
             mobileNav.classList.toggle('active');
             body.classList.toggle('mobile-menu-open');
-        });
+        };
+        
+        mobileToggle.addEventListener('click', toggleMobileMenu);
         
         // Fechar menu ao clicar fora
         document.addEventListener('click', function(e) {
@@ -53,52 +67,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // ============ SUBMENU MOBILE ============
-    const mobileDropdowns = document.querySelectorAll('.mobile-menu .has-dropdown');
-    
-    mobileDropdowns.forEach(function(dropdown) {
-        dropdown.addEventListener('click', function(e) {
-            e.preventDefault();
-            const submenu = this.nextElementSibling;
-            if (submenu && submenu.classList.contains('mobile-submenu')) {
-                submenu.classList.toggle('active');
-                
-                // Rotacionar ícone (se tiver)
-                const icon = this.querySelector('i');
-                if (icon) {
-                    icon.style.transform = submenu.classList.contains('active') 
-                        ? 'rotate(180deg)' 
-                        : 'rotate(0deg)';
-                }
-            }
-        });
-    });
-    
-    // ============ SEARCH FUNCTIONALITY ============
-    const searchBtn = document.querySelector('.search-btn');
-    
-    if (searchBtn) {
-        searchBtn.addEventListener('click', function() {
-            // Opção 1: Redirecionar para página de busca
-            // window.location.href = '/busca';
-            
-            // Opção 2: Abrir modal de busca (implementar modal separadamente)
-            // openSearchModal();
-            
-            // Opção 3: Expandir input de busca no header
-            console.log('Busca ativada - implementar funcionalidade');
-            alert('Funcionalidade de busca - implementar conforme necessidade');
-        });
-    }
-    
-    // ============ SMOOTH SCROLL ============
+    // Smooth scroll
     const smoothScrollLinks = document.querySelectorAll('a[href^="#"]');
     
     smoothScrollLinks.forEach(function(link) {
         link.addEventListener('click', function(e) {
             const targetId = this.getAttribute('href');
-            
-            // Ignorar se for apenas "#"
             if (targetId === '#') return;
             
             e.preventDefault();
@@ -113,8 +87,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     behavior: 'smooth'
                 });
                 
-                // Fechar menu mobile se estiver aberto
-                if (mobileNav.classList.contains('active')) {
+                // Fechar menu mobile
+                if (mobileNav && mobileNav.classList.contains('active')) {
                     mobileToggle.classList.remove('active');
                     mobileNav.classList.remove('active');
                     body.classList.remove('mobile-menu-open');
@@ -123,64 +97,36 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // ============ ACTIVE MENU HIGHLIGHT ============
+    // Active menu highlight
     const currentPath = window.location.pathname;
     const navLinks = document.querySelectorAll('.nav-link');
     
     navLinks.forEach(function(link) {
-        const linkPath = link.getAttribute('href');
-        
-        // Highlight exato ou se for uma subpágina
-        if (linkPath === currentPath || 
-            (linkPath !== '/' && currentPath.startsWith(linkPath))) {
+        const linkPath = new URL(link.href).pathname;
+        if (linkPath === currentPath || (linkPath !== '/' && currentPath.startsWith(linkPath))) {
             link.classList.add('active');
         }
     });
     
-    // ============ CLOSE MOBILE MENU ON RESIZE ============
+    // Close mobile menu on resize
     let resizeTimer;
     window.addEventListener('resize', function() {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function() {
-            if (window.innerWidth > 1024) {
+            if (window.innerWidth > 1024 && mobileNav) {
                 mobileNav.classList.remove('active');
-                mobileToggle.classList.remove('active');
+                if (mobileToggle) mobileToggle.classList.remove('active');
                 body.classList.remove('mobile-menu-open');
             }
         }, 250);
     });
     
-    // ============ PREVENT SCROLL WHEN MOBILE MENU OPEN ============
-    const preventScroll = function(e) {
-        if (body.classList.contains('mobile-menu-open')) {
-            e.preventDefault();
-        }
-    };
-    
-    // ============ KEYBOARD ACCESSIBILITY ============
-    // ESC para fechar menu mobile
+    // ESC para fechar menu
     document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape' && mobileNav.classList.contains('active')) {
+        if (e.key === 'Escape' && mobileNav && mobileNav.classList.contains('active')) {
             mobileToggle.classList.remove('active');
             mobileNav.classList.remove('active');
             body.classList.remove('mobile-menu-open');
         }
     });
-    
 });
-
-// ============ FUNÇÕES AUXILIARES ============
-
-// Função para adicionar classe ao body quando header está fixo
-function handleHeaderOffset() {
-    const header = document.querySelector('.site-header');
-    if (header) {
-        document.body.style.paddingTop = header.offsetHeight + 'px';
-    }
-}
-
-// Executar ao carregar
-handleHeaderOffset();
-
-// Executar ao redimensionar
-window.addEventListener('resize', handleHeaderOffset);

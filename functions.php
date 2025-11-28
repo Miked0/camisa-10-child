@@ -35,10 +35,76 @@ function camisa10_enqueue_styles() {
 }
 add_action('wp_enqueue_scripts', 'camisa10_enqueue_styles', 10);
 
+
+/**
+ * ============================================
+ * ASSETS GLOBAIS (HEADER, FOOTER, CUSTOM STYLES)
+ * Carrega em todas as páginas
+ * ============================================
+ */
+function camisa10_global_assets() {
+    // 1. CSS VARIABLES (base para tudo)
+    if (!wp_style_is('camisa10-variables', 'enqueued')) {
+        wp_enqueue_style(
+            'camisa10-variables',
+            get_stylesheet_directory_uri() . '/assets/css/custom-variables.css',
+            array(),
+            filemtime(get_stylesheet_directory() . '/assets/css/custom-variables.css')
+        );
+    }
+    
+    // 2. HEADER CSS
+    wp_enqueue_style(
+        'camisa10-header',
+        get_stylesheet_directory_uri() . '/assets/css/header.css',
+        array('camisa10-variables'),
+        filemtime(get_stylesheet_directory() . '/assets/css/header.css')
+    );
+    
+    // 3. CUSTOM STYLES CSS
+    wp_enqueue_style(
+        'camisa10-custom-styles',
+        get_stylesheet_directory_uri() . '/assets/css/custom-styles.css',
+        array('camisa10-header'),
+        filemtime(get_stylesheet_directory() . '/assets/css/custom-styles.css')
+    );
+    
+    // 4. FONT AWESOME (ícones)
+    if (!wp_style_is('font-awesome', 'enqueued')) {
+        wp_enqueue_style(
+            'font-awesome',
+            'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css',
+            array(),
+            '6.4.0'
+        );
+    }
+    
+    // 5. HEADER JS
+    wp_enqueue_script(
+        'camisa10-header-js',
+        get_stylesheet_directory_uri() . '/assets/js/header.js',
+        array('jquery'),
+        filemtime(get_stylesheet_directory() . '/assets/js/header.js'),
+        true // Carrega no footer
+    );
+}
+add_action('wp_enqueue_scripts', 'camisa10_global_assets', 15);
+
+
 /**
  * ============================================
  * ASSETS ESPECÍFICOS DA HOMEPAGE
  * ============================================
+ */
+/**
+ * ============================================
+ * ASSETS ESPECÍFICOS DA HOMEPAGE
+ * ============================================
+ * 
+ * CORREÇÃO APLICADA (27/11/2025):
+ * - Slick CSS movido para ANTES de custom-home.css
+ * - custom-home.css agora depende de 'slick-css'
+ * - Isso garante que custom-home.css sobrescreve Slick corretamente
  */
 function camisa10_home_assets() {
     if (!is_page_template('page-home.php') && !is_front_page()) {
@@ -49,6 +115,7 @@ function camisa10_home_assets() {
      * ANTES: if (!wp_style_is('bootstrap', 'enqueued')) { wp_enqueue_style... }
      * DEPOIS: Sempre registrar, WordPress evita duplicatas automaticamente
      */
+
     // 1. BOOTSTRAP CSS
     wp_register_style(
         'bootstrap',
@@ -74,20 +141,22 @@ function camisa10_home_assets() {
         filemtime(get_stylesheet_directory() . '/assets/css/hero-banner.css')
     );
 
-    // 4. CUSTOM HOME CSS
-    wp_enqueue_style(
-        'camisa10-home-css',
-        get_stylesheet_directory_uri() . '/assets/css/custom-home.css',
-        array('camisa10-hero-banner-css'),
-        filemtime(get_stylesheet_directory() . '/assets/css/custom-home.css')
-    );
-
-    // 5. SLICK SLIDER CSS
+    // 4. SLICK SLIDER CSS
+    // ⚠️ MOVIDO PARA ANTES DE custom-home.css (CORREÇÃO 27/11/2025)
     wp_enqueue_style(
         'slick-css',
         'https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css',
         array(),
         '1.8.1'
+    );
+
+    // 5. CUSTOM HOME CSS
+    // ✅ AGORA DEPENDE DE 'slick-css' (CORREÇÃO 27/11/2025)
+    wp_enqueue_style(
+        'camisa10-home-css',
+        get_stylesheet_directory_uri() . '/assets/css/custom-home.css',
+        array('camisa10-hero-banner-css', 'slick-css'), // ← ADICIONADO 'slick-css'!
+        filemtime(get_stylesheet_directory() . '/assets/css/custom-home.css')
     );
 
     // 6. BOOTSTRAP JS
@@ -127,6 +196,7 @@ function camisa10_home_assets() {
         true
     );
 }
+
 add_action('wp_enqueue_scripts', 'camisa10_home_assets', 20);
 
 /**
