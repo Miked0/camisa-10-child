@@ -1,0 +1,1164 @@
+[
+    {
+        "key": "group_692341d0494ec",
+        "title": "Dados do Curso",
+        "fields": [
+            {
+                "key": "field_692341d1416e5",
+                "label": "Carga Horária",
+                "name": "curso_carga_horaria",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "120h",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_692348b81051b",
+                "label": "Formato",
+                "name": "curso_formato",
+                "aria-label": "",
+                "type": "select",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "Online": "Online",
+                    "Presencial": "Presencial",
+                    "Híbrido": "Híbrido"
+                },
+                "default_value": false,
+                "return_format": "value",
+                "multiple": 0,
+                "allow_null": 0,
+                "allow_in_bindings": 0,
+                "ui": 0,
+                "ajax": 0,
+                "placeholder": "",
+                "create_options": 0,
+                "save_options": 0
+            },
+            {
+                "key": "field_692503b8fc08b",
+                "label": "Próxima Turma",
+                "name": "curso_proxima_turma",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Ex: Janeiro\/2026",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6923434e416e8",
+                "label": "Preço",
+                "name": "curso_preco",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Sem R$ (número de amor)",
+                "min": "",
+                "max": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6923437f416e9",
+                "label": "Preço Promocional (opcional)",
+                "name": "curso_preco_promocional",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_69250440fc08c",
+                "label": "Link de Compra",
+                "name": "curso_link_compra",
+                "aria-label": "",
+                "type": "url",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "URL Completa",
+                "allow_in_bindings": 0,
+                "placeholder": ""
+            },
+            {
+                "key": "field_69234303416e7",
+                "label": "Nível",
+                "name": "curso_nivel",
+                "aria-label": "",
+                "type": "checkbox",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "Iniciante": "Iniciante",
+                    "Intermediário": "Intermediário",
+                    "Avançado": "Avançado"
+                },
+                "default_value": [],
+                "return_format": "value",
+                "allow_custom": 0,
+                "allow_in_bindings": 0,
+                "layout": "vertical",
+                "toggle": 0,
+                "save_custom": 0,
+                "custom_choice_button_text": "Adicionar nova escolha"
+            },
+            {
+                "key": "field_692343e8416eb",
+                "label": "Rating",
+                "name": "curso_rating",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "4,5",
+                "min": "",
+                "max": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_6923439e416ea",
+                "label": "Instrutor",
+                "name": "curso_instrutor",
+                "aria-label": "",
+                "type": "post_object",
+                "instructions": "",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "post_type": [
+                    "especialista"
+                ],
+                "post_status": "",
+                "taxonomy": "",
+                "return_format": "object",
+                "multiple": 0,
+                "allow_null": 0,
+                "allow_in_bindings": 0,
+                "bidirectional": 0,
+                "ui": 1,
+                "bidirectional_target": []
+            },
+            {
+                "key": "field_6923440a416ec",
+                "label": "Total de Alunos",
+                "name": "curso_total_alunos",
+                "aria-label": "",
+                "type": "number",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": 0,
+                "min": "",
+                "max": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "step": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_69234418416ed",
+                "label": "Destaque",
+                "name": "curso_destaque",
+                "aria-label": "",
+                "type": "true_false",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "message": "Exibir em destaque?",
+                "default_value": 0,
+                "allow_in_bindings": 0,
+                "ui": 0,
+                "ui_on_text": "",
+                "ui_off_text": ""
+            },
+            {
+                "key": "field_69234455416ee",
+                "label": "Gratuito",
+                "name": "curso_gratuito",
+                "aria-label": "",
+                "type": "true_false",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "message": "Exibir Material Gratuito?",
+                "default_value": 0,
+                "allow_in_bindings": 0,
+                "ui": 0,
+                "ui_on_text": "",
+                "ui_off_text": ""
+            },
+            {
+                "key": "field_692504befc08d",
+                "label": "Info Blocos",
+                "name": "info_blocos",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Adicionar linha",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_692504e2fc08e",
+                        "label": "titulo",
+                        "name": "titulo",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "Ex: \"O que você vai aprender\"",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_692504befc08d"
+                    },
+                    {
+                        "key": "field_692504f1fc08f",
+                        "label": "descricao",
+                        "name": "descricao",
+                        "aria-label": "",
+                        "type": "textarea",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "Texto descritivo",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "rows": "",
+                        "placeholder": "",
+                        "new_lines": "",
+                        "parent_repeater": "field_692504befc08d"
+                    },
+                    {
+                        "key": "field_69250503fc090",
+                        "label": "icone",
+                        "name": "icone",
+                        "aria-label": "",
+                        "type": "select",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "choices": {
+                            "lightbulb": "lightbulb",
+                            "graduation-cap": "graduation-cap",
+                            "award": "award",
+                            "default": "default"
+                        },
+                        "default_value": false,
+                        "return_format": "label",
+                        "multiple": 0,
+                        "allow_null": 0,
+                        "allow_in_bindings": 0,
+                        "ui": 0,
+                        "ajax": 0,
+                        "placeholder": "",
+                        "create_options": 0,
+                        "save_options": 0,
+                        "parent_repeater": "field_692504befc08d"
+                    }
+                ]
+            },
+            {
+                "key": "field_69250581fc091",
+                "label": "FAQ",
+                "name": "curso_faq",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "block",
+                "pagination": 0,
+                "min": 3,
+                "max": 6,
+                "collapsed": "",
+                "button_label": "Adicionar linha",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_6925059afc092",
+                        "label": "pergunta",
+                        "name": "pergunta",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_69250581fc091"
+                    },
+                    {
+                        "key": "field_692505a5fc093",
+                        "label": "resposta",
+                        "name": "resposta",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "Resposta detalhada",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_69250581fc091"
+                    }
+                ]
+            },
+            {
+                "key": "field_692506e103d7b",
+                "label": "Depoimentos",
+                "name": "curso_depoimentos",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Adicionar linha",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_692506ee03d7c",
+                        "label": "nome",
+                        "name": "nome",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "Nome completo",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_692506e103d7b"
+                    },
+                    {
+                        "key": "field_692506fc03d7d",
+                        "label": "cargo",
+                        "name": "cargo",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "Cargo\/função",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_692506e103d7b"
+                    },
+                    {
+                        "key": "field_6925070b03d7e",
+                        "label": "empresa",
+                        "name": "empresa",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "Empresa (opcional)",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_692506e103d7b"
+                    },
+                    {
+                        "key": "field_6925071d03d7f",
+                        "label": "depoimento",
+                        "name": "depoimento",
+                        "aria-label": "",
+                        "type": "textarea",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "Texto do depoimento",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "rows": "",
+                        "placeholder": "",
+                        "new_lines": "",
+                        "parent_repeater": "field_692506e103d7b"
+                    },
+                    {
+                        "key": "field_6925076303d80",
+                        "label": "foto",
+                        "name": "foto",
+                        "aria-label": "",
+                        "type": "image",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "array",
+                        "library": "all",
+                        "min_width": "",
+                        "min_height": "",
+                        "min_size": "",
+                        "max_width": "",
+                        "max_height": "",
+                        "max_size": "",
+                        "mime_types": "",
+                        "allow_in_bindings": 0,
+                        "preview_size": "medium",
+                        "parent_repeater": "field_692506e103d7b"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "curso"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0,
+        "display_title": ""
+    },
+    {
+        "key": "group_69227ec35dada",
+        "title": "Hero Slides",
+        "fields": [
+            {
+                "key": "field_69227ec4bf80b",
+                "label": "hero slides",
+                "name": "hero_slides",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Adicionar linha",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_69227eecbf80c",
+                        "label": "Background Image",
+                        "name": "background_image",
+                        "aria-label": "",
+                        "type": "image",
+                        "instructions": "Imagem de Fundo 1920x600",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "array",
+                        "library": "all",
+                        "min_width": 1920,
+                        "min_height": 600,
+                        "min_size": "",
+                        "max_width": 1920,
+                        "max_height": 600,
+                        "max_size": "",
+                        "mime_types": "",
+                        "allow_in_bindings": 0,
+                        "preview_size": "medium",
+                        "parent_repeater": "field_69227ec4bf80b"
+                    },
+                    {
+                        "key": "field_69227f7ebf80d",
+                        "label": "Badge Text",
+                        "name": "badge_text",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "Texto da Badge",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "Ex: NOVO, EM DESTAQUE",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_69227ec4bf80b"
+                    },
+                    {
+                        "key": "field_69227f9ebf80e",
+                        "label": "Title",
+                        "name": "title",
+                        "aria-label": "",
+                        "type": "textarea",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "Label: Título Principal",
+                        "maxlength": 150,
+                        "allow_in_bindings": 1,
+                        "rows": "",
+                        "placeholder": "",
+                        "new_lines": "",
+                        "parent_repeater": "field_69227ec4bf80b"
+                    },
+                    {
+                        "key": "field_69227fd7bf80f",
+                        "label": "Subtitle",
+                        "name": "subtitle",
+                        "aria-label": "",
+                        "type": "textarea",
+                        "instructions": "",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": 300,
+                        "allow_in_bindings": 0,
+                        "rows": "",
+                        "placeholder": "",
+                        "new_lines": "",
+                        "parent_repeater": "field_69227ec4bf80b"
+                    },
+                    {
+                        "key": "field_69227fe3bf810",
+                        "label": "Button Primary",
+                        "name": "button_primary",
+                        "aria-label": "",
+                        "type": "link",
+                        "instructions": "Botão Primário (CTA)",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "array",
+                        "allow_in_bindings": 0,
+                        "parent_repeater": "field_69227ec4bf80b"
+                    },
+                    {
+                        "key": "field_69228001bf811",
+                        "label": "Button Secondary (opcional)",
+                        "name": "button_secondary",
+                        "aria-label": "",
+                        "type": "link",
+                        "instructions": "Botão Secundário",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "return_format": "array",
+                        "allow_in_bindings": 0,
+                        "parent_repeater": "field_69227ec4bf80b"
+                    },
+                    {
+                        "key": "field_69228025bf812",
+                        "label": "Extra Info (opcional)",
+                        "name": "extra_info_opcional",
+                        "aria-label": "",
+                        "type": "wysiwyg",
+                        "instructions": "Informações Extras",
+                        "required": 0,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "allow_in_bindings": 0,
+                        "tabs": "all",
+                        "toolbar": "basic",
+                        "media_upload": 1,
+                        "delay": 0,
+                        "parent_repeater": "field_69227ec4bf80b"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "options_page",
+                    "operator": "==",
+                    "value": "theme-settings"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0,
+        "display_title": ""
+    },
+    {
+        "key": "group_691fc3266aa37",
+        "title": "Informações da Mentoria",
+        "fields": [
+            {
+                "key": "field_691fc3289b612",
+                "label": "Subtítulo",
+                "name": "subtitulo",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Subtítulo que aparece abaixo do título principal (máx. 120 caracteres)",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Ex: Transforme sua liderança em 90 dias",
+                "maxlength": 120,
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_691fc35c9b613",
+                "label": "Tipo de Mentoria",
+                "name": "tipo_mentoria",
+                "aria-label": "",
+                "type": "select",
+                "instructions": "Selecione o tipo de mentoria",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "Individual": "Individual",
+                    "Equipes": "Equipes",
+                    "Corporativa": "Corporativa"
+                },
+                "default_value": "Individual",
+                "return_format": "value",
+                "multiple": 0,
+                "allow_null": 1,
+                "allow_in_bindings": 0,
+                "ui": 1,
+                "ajax": 0,
+                "placeholder": "",
+                "create_options": 0,
+                "save_options": 0
+            },
+            {
+                "key": "field_691fc3919b614",
+                "label": "Formato",
+                "name": "formato",
+                "aria-label": "",
+                "type": "select",
+                "instructions": "Como a mentoria é realizada",
+                "required": 1,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "choices": {
+                    "Online": "Online",
+                    "Presencial": "Presencial",
+                    "Híbrido": "Híbrido"
+                },
+                "default_value": "Online",
+                "return_format": "value",
+                "multiple": 0,
+                "allow_null": 0,
+                "allow_in_bindings": 0,
+                "ui": 1,
+                "ajax": 0,
+                "placeholder": "",
+                "create_options": 0,
+                "save_options": 0
+            },
+            {
+                "key": "field_691fc40e9b615",
+                "label": "Duração",
+                "name": "duracao",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Duração estimada da mentoria",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Ex: 3 meses, 12 sessões, 40 horas",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_691fc4249b616",
+                "label": "Investimento",
+                "name": "investimento",
+                "aria-label": "",
+                "type": "text",
+                "instructions": "Valor do investimento",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Ex: R$ 5.000,00 ou Sob consulta",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "placeholder": "",
+                "prepend": "",
+                "append": ""
+            },
+            {
+                "key": "field_691fc42f9b617",
+                "label": "Metodologia Aplicada",
+                "name": "metodologia",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "Descreva a metodologia utilizada na mentoria",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Explique como funciona a metodologia...",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "rows": 6,
+                "placeholder": "",
+                "new_lines": "br"
+            },
+            {
+                "key": "field_691fc45e9b618",
+                "label": "Para Quem É Recomendado",
+                "name": "para_quem",
+                "aria-label": "",
+                "type": "textarea",
+                "instructions": "",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "default_value": "Esta mentoria é ideal para...",
+                "maxlength": "",
+                "allow_in_bindings": 0,
+                "rows": 6,
+                "placeholder": "",
+                "new_lines": "br"
+            },
+            {
+                "key": "field_691fc47b9b619",
+                "label": "Processo da Mentoria",
+                "name": "processo",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "Defina os passos do processo de mentoria (recomendado: 4 passos)",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "block",
+                "pagination": 0,
+                "min": 0,
+                "max": 6,
+                "collapsed": "",
+                "button_label": "Adicionar Passo",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_691fc4b59b61a",
+                        "label": "Título do Passo",
+                        "name": "titulo",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "Ex: Diagnóstico Inicial",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_691fc47b9b619"
+                    },
+                    {
+                        "key": "field_691fc4c89b61b",
+                        "label": "Descrição",
+                        "name": "descricao",
+                        "aria-label": "",
+                        "type": "textarea",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "Descreva o que acontece neste passo...",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "rows": 3,
+                        "placeholder": "",
+                        "new_lines": "",
+                        "parent_repeater": "field_691fc47b9b619"
+                    }
+                ]
+            },
+            {
+                "key": "field_691fc4e99b61d",
+                "label": "Mentor Responsável",
+                "name": "mentor_id",
+                "aria-label": "",
+                "type": "post_object",
+                "instructions": "Selecione o especialista que conduz esta mentoria",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "post_type": [
+                    "specialists"
+                ],
+                "post_status": "",
+                "taxonomy": "",
+                "return_format": "id",
+                "multiple": 0,
+                "allow_null": 1,
+                "allow_in_bindings": 1,
+                "bidirectional": 0,
+                "ui": 1,
+                "bidirectional_target": []
+            },
+            {
+                "key": "field_691fc5229b61e",
+                "label": "FAQ - Perguntas Frequentes",
+                "name": "faqs",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "Adicione perguntas e respostas frequentes (mínimo 5 recomendado)",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "table",
+                "pagination": 0,
+                "min": 0,
+                "max": 15,
+                "collapsed": "",
+                "button_label": "Adicionar Pergunta",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_691fc5429b61f",
+                        "label": "Pergunta",
+                        "name": "pergunta",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "Ex: Quanto tempo dura a mentoria?",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "placeholder": "",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_691fc5229b61e"
+                    },
+                    {
+                        "key": "field_691fc54e9b620",
+                        "label": "Resposta",
+                        "name": "resposta",
+                        "aria-label": "",
+                        "type": "textarea",
+                        "instructions": "",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "Resposta detalhada...",
+                        "maxlength": "",
+                        "allow_in_bindings": 0,
+                        "rows": 4,
+                        "placeholder": "",
+                        "new_lines": "br",
+                        "parent_repeater": "field_691fc5229b61e"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "mentoria"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0,
+        "display_title": ""
+    }
+]

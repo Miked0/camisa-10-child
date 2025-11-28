@@ -1,0 +1,602 @@
+/**
+ * Camisa 10 - Hero Banner Component
+ * Versão: 2.0 (corrigida)
+ * 
+ * Dependências: custom-variables.css
+ */
+
+/* ========================================
+   HERO BANNER CONTAINER
+   ======================================== */
+
+.hero-banner {
+  position: relative;
+  width: 100%;
+  min-height: 500px;
+  height: 70vh;
+  max-height: 800px;
+  overflow: hidden;
+  background-color: var(--color-preto);
+}
+
+.hero-banner-section {
+  margin-bottom: var(--space-4xl);
+}
+
+/* ========================================
+   SLIDES
+   ======================================== */
+
+.hero-slides {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.hero-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 600ms ease-in-out, visibility 600ms;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  z-index: var(--z-base);
+}
+
+/* Animações de entrada/saída */
+.hero-slide.slide-in-right {
+  animation: slideInRight 600ms ease-out forwards;
+}
+
+.hero-slide.slide-out-left {
+  animation: slideOutLeft 600ms ease-in forwards;
+}
+
+.hero-slide.slide-in-left {
+  animation: slideInLeft 600ms ease-out forwards;
+}
+
+.hero-slide.slide-out-right {
+  animation: slideOutRight 600ms ease-in forwards;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+/* ========================================
+   IMAGEM DE FUNDO DO SLIDE
+   ======================================== */
+
+.hero-slide__background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.hero-slide__background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Lazy load placeholder */
+.hero-slide__background img[data-src] {
+  filter: blur(10px);
+  transition: filter var(--transition-base);
+}
+
+.hero-slide__background img.loaded {
+  filter: blur(0);
+}
+
+/* Overlay escuro para legibilidade */
+.hero-slide__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
+  z-index: 2;
+}
+
+/* ========================================
+   CONTEÚDO DO SLIDE
+   ======================================== */
+
+.hero-slide__content {
+  position: relative;
+  z-index: 3;
+  max-width: 800px;
+  padding: var(--space-xl);
+  color: var(--color-branco);
+  text-align: center;
+}
+
+/* Badge/Tag */
+.hero-slide__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-amarelo);
+  color: var(--color-preto);
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: var(--radius-full);
+  margin-bottom: var(--space-lg);
+  animation: fadeInUp 600ms ease-out 200ms both;
+}
+
+/* Título */
+.hero-slide__title {
+  font-family: var(--font-primary);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-black);
+  line-height: var(--line-height-tight);
+  margin: 0 0 var(--space-lg) 0;
+  color: var(--color-branco);
+  animation: fadeInUp 600ms ease-out 300ms both;
+}
+
+/* Subtítulo/Descrição */
+.hero-slide__description {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-normal);
+  line-height: var(--line-height-normal);
+  margin: 0 0 var(--space-xl) 0;
+  color: rgba(255, 255, 255, 0.9);
+  animation: fadeInUp 600ms ease-out 400ms both;
+}
+
+/* CTA Buttons */
+.hero-slide__cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+  animation: fadeInUp 600ms ease-out 500ms both;
+}
+
+.hero-slide__cta .btn {
+  min-width: 180px;
+  padding: var(--space-md) var(--space-xl);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.hero-slide__cta .btn--primary {
+  background-color: var(--color-amarelo);
+  color: var(--color-preto);
+  border: 2px solid var(--color-amarelo);
+}
+
+.hero-slide__cta .btn--primary:hover {
+  background-color: var(--color-preto);
+  color: var(--color-amarelo);
+}
+
+.hero-slide__cta .btn--secondary {
+  background-color: transparent;
+  color: var(--color-branco);
+  border: 2px solid var(--color-branco);
+}
+
+.hero-slide__cta .btn--secondary:hover {
+  background-color: var(--color-branco);
+  color: var(--color-preto);
+}
+
+/* Animação fadeInUp */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   NAVEGAÇÃO (PREV/NEXT)
+   ======================================== */
+
+.hero-navigation {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  transform: translateY(-50%);
+  display: flex;
+  justify-content: space-between;
+  padding: 0 var(--space-lg);
+  z-index: var(--z-sticky);
+  pointer-events: none;
+}
+
+.hero-prev,
+.hero-next {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-full);
+  color: var(--color-branco);
+  cursor: pointer;
+  pointer-events: auto;
+  transition: all var(--transition-base);
+}
+
+.hero-prev:hover,
+.hero-next:hover {
+  background-color: var(--color-amarelo);
+  border-color: var(--color-amarelo);
+  color: var(--color-preto);
+  transform: scale(1.1);
+}
+
+.hero-prev svg,
+.hero-next svg {
+  width: 24px;
+  height: 24px;
+}
+
+.hero-prev {
+  transform: rotate(0deg);
+}
+
+.hero-next {
+  transform: rotate(0deg);
+}
+
+/* ========================================
+   DOTS INDICATOR
+   ======================================== */
+
+.hero-dots {
+  position: absolute;
+  bottom: var(--space-xl);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  z-index: var(--z-sticky);
+}
+
+.hero-dots .dot {
+  width: 12px;
+  height: 12px;
+  background-color: rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.hero-dots .dot:hover {
+  background-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.2);
+}
+
+.hero-dots .dot.is-active {
+  background-color: var(--color-amarelo);
+  border-color: var(--color-amarelo);
+  width: 32px;
+  border-radius: var(--radius-full);
+}
+
+/* ========================================
+   PLAY/PAUSE BUTTON
+   ======================================== */
+
+.hero-play-pause {
+  position: absolute;
+  bottom: var(--space-xl);
+  right: var(--space-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--radius-full);
+  color: var(--color-branco);
+  cursor: pointer;
+  z-index: var(--z-sticky);
+  transition: all var(--transition-base);
+}
+
+.hero-play-pause:hover {
+  background-color: var(--color-amarelo);
+  border-color: var(--color-amarelo);
+  color: var(--color-preto);
+}
+
+.hero-play-pause svg {
+  width: 20px;
+  height: 20px;
+}
+
+.hero-play-pause.is-paused .pause-icon {
+  display: none;
+}
+
+.hero-play-pause.is-paused .play-icon {
+  display: block;
+}
+
+.hero-play-pause .pause-icon {
+  display: block;
+}
+
+.hero-play-pause .play-icon {
+  display: none;
+}
+
+/* ========================================
+   RESPONSIVE - MOBILE (320px+)
+   ======================================== */
+
+@media (max-width: 767px) {
+  .hero-banner {
+    min-height: 400px;
+    height: 60vh;
+  }
+
+  .hero-slide__content {
+    padding: var(--space-md);
+  }
+
+  .hero-slide__title {
+    font-size: var(--font-size-2xl);
+  }
+
+  .hero-slide__description {
+    font-size: var(--font-size-base);
+  }
+
+  .hero-slide__cta {
+    flex-direction: column;
+  }
+
+  .hero-slide__cta .btn {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .hero-navigation {
+    padding: 0 var(--space-md);
+  }
+
+  .hero-prev,
+  .hero-next {
+    width: 40px;
+    height: 40px;
+  }
+
+  .hero-prev svg,
+  .hero-next svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .hero-dots {
+    bottom: var(--space-lg);
+  }
+
+  .hero-play-pause {
+    bottom: var(--space-lg);
+    right: var(--space-md);
+  }
+}
+
+/* ========================================
+   RESPONSIVE - TABLET (768px+)
+   ======================================== */
+
+@media (min-width: 768px) {
+  .hero-banner {
+    min-height: 550px;
+    height: 75vh;
+  }
+
+  .hero-slide__content {
+    max-width: 900px;
+  }
+
+  .hero-slide__title {
+    font-size: var(--font-size-4xl);
+  }
+
+  .hero-slide__description {
+    font-size: var(--font-size-xl);
+  }
+
+  .hero-navigation {
+    padding: 0 var(--space-xl);
+  }
+
+  .hero-prev,
+  .hero-next {
+    width: 56px;
+    height: 56px;
+  }
+}
+
+/* ========================================
+   RESPONSIVE - DESKTOP (1024px+)
+   ======================================== */
+
+@media (min-width: 1024px) {
+  .hero-banner {
+    min-height: 600px;
+    height: 80vh;
+  }
+
+  .hero-slide__content {
+    max-width: 1000px;
+    text-align: left;
+    padding-left: var(--space-2xl);
+  }
+
+  .hero-slide__badge {
+    margin-bottom: var(--space-xl);
+  }
+
+  .hero-slide__title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .hero-slide__cta {
+    justify-content: flex-start;
+  }
+
+  .hero-navigation {
+    padding: 0 var(--space-2xl);
+  }
+}
+
+/* ========================================
+   RESPONSIVE - WIDE (1440px+)
+   ======================================== */
+
+@media (min-width: 1440px) {
+  .hero-banner {
+    max-height: 900px;
+  }
+
+  .hero-slide__content {
+    max-width: 1200px;
+  }
+}
+
+/* ========================================
+   ACESSIBILIDADE
+   ======================================== */
+
+.hero-prev:focus-visible,
+.hero-next:focus-visible,
+.hero-dots .dot:focus-visible,
+.hero-play-pause:focus-visible {
+  outline: 2px solid var(--color-amarelo);
+  outline-offset: 4px;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero-slide,
+  .hero-slide.slide-in-right,
+  .hero-slide.slide-out-left,
+  .hero-slide.slide-in-left,
+  .hero-slide.slide-out-right,
+  .hero-slide__badge,
+  .hero-slide__title,
+  .hero-slide__description,
+  .hero-slide__cta {
+    animation: none;
+    transition-duration: 0.01ms;
+  }
+}
+
+/* ========================================
+   PRINT
+   ======================================== */
+
+@media print {
+  .hero-banner {
+    height: auto;
+    min-height: auto;
+    page-break-inside: avoid;
+  }
+
+  .hero-navigation,
+  .hero-dots,
+  .hero-play-pause {
+    display: none;
+  }
+
+  .hero-slide {
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .hero-slide:not(:first-child) {
+    display: none;
+  }
+}

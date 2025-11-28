@@ -1,0 +1,297 @@
+/**
+ * Hero Banner CSS - OneKorse Style
+ * @version 4.0.0
+ */
+
+/* ============================================
+   CAROUSEL BASE
+   ============================================ */
+#heroCarousel {
+    position: relative;
+    width: 100%;
+    background: #0A3BE8;
+}
+
+.carousel-inner {
+    min-height: 600px;
+}
+
+.carousel-item {
+    min-height: 600px;
+}
+
+/* Transição fade */
+.carousel-fade .carousel-item {
+    opacity: 0;
+    transition: opacity 0.6s ease-in-out;
+}
+
+.carousel-fade .carousel-item.active {
+    opacity: 1;
+}
+
+/* ============================================
+   SLIDE CONTENT
+   ============================================ */
+.hero-slide-content {
+    padding: 100px 0;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+}
+
+.hero-slide-content .container {
+    max-width: 1320px;
+}
+
+/* ============================================
+   CONTEÚDO DE TEXTO
+   ============================================ */
+.hero-text-col {
+    z-index: 2;
+}
+
+.hero-content {
+    padding-right: 30px;
+}
+
+.hero-badge {
+    display: inline-block;
+    padding: 8px 20px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #FFFFFF;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 30px;
+    margin-bottom: 20px;
+    backdrop-filter: blur(10px);
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: #FFFFFF;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+}
+
+.hero-title .highlight {
+    background: linear-gradient(135deg, #FAF323 0%, #F4C7A1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hero-title .highlight-blue {
+    color: #32B8C6;
+}
+
+.hero-title .highlight-green {
+    color: #02FB9A;
+}
+
+.hero-description {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 35px;
+    max-width: 550px;
+}
+
+/* ============================================
+   BOTÕES
+   ============================================ */
+.hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.hero-buttons .btn {
+    padding: 15px 35px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.hero-buttons .btn-primary {
+    background: #FAF323;
+    border-color: #FAF323;
+    color: #1A1A1A;
+}
+
+.hero-buttons .btn-primary:hover {
+    background: #E8E020;
+    border-color: #E8E020;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(250, 243, 35, 0.3);
+}
+
+.hero-buttons .btn-outline-light {
+    background: transparent;
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    color: #FFFFFF;
+}
+
+.hero-buttons .btn-outline-light:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: #FFFFFF;
+    color: #FFFFFF;
+}
+
+/* ============================================
+   IMAGEM
+   ============================================ */
+.hero-image-col {
+    position: relative;
+    z-index: 1;
+}
+
+.hero-image {
+    border-radius: 15px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 100%;
+    height: auto;
+}
+
+/* ============================================
+   CONTROLES DE NAVEGAÇÃO
+   ============================================ */
+.carousel-control-prev,
+.carousel-control-next {
+    width: 50px;
+    height: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 50%;
+    opacity: 1;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.carousel-control-prev {
+    left: 30px;
+}
+
+.carousel-control-next {
+    right: 30px;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* ============================================
+   INDICADORES
+   ============================================ */
+.carousel-indicators {
+    bottom: 30px;
+    margin: 0;
+}
+
+.carousel-indicators [data-bs-target] {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    margin: 0 5px;
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.carousel-indicators [data-bs-target]:hover {
+    background: rgba(255, 255, 255, 0.8);
+    transform: scale(1.2);
+}
+
+.carousel-indicators .active {
+    background: #FFFFFF;
+    width: 35px;
+    border-radius: 6px;
+}
+
+/* ============================================
+   RESPONSIVIDADE
+   ============================================ */
+@media (max-width: 991px) {
+    .hero-slide-content {
+        padding: 80px 0;
+        min-height: 500px;
+    }
+    
+    .carousel-inner,
+    .carousel-item {
+        min-height: 500px;
+    }
+    
+    .hero-title {
+        font-size: 2.5rem;
+    }
+    
+    .hero-description {
+        font-size: 16px;
+    }
+    
+    .hero-content {
+        padding-right: 0;
+        margin-bottom: 40px;
+    }
+    
+    .hero-image-col {
+        text-align: center;
+    }
+}
+
+@media (max-width: 767px) {
+    .hero-slide-content {
+        padding: 60px 0;
+        min-height: auto;
+    }
+    
+    .carousel-inner,
+    .carousel-item {
+        min-height: auto;
+    }
+    
+    .hero-title {
+        font-size: 2rem;
+    }
+    
+    .hero-description {
+        font-size: 15px;
+    }
+    
+    .hero-buttons {
+        flex-direction: column;
+    }
+    
+    .hero-buttons .btn {
+        width: 100%;
+        margin: 0 !important;
+    }
+    
+    .carousel-control-prev,
+    .carousel-control-next {
+        display: none;
+    }
+    
+    .hero-image {
+        max-width: 90%;
+    }
+}
