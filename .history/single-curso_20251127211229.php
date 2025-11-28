@@ -2,18 +2,19 @@
 /**
  * Template para exibição de curso individual
  * @package Camisa10
- * @version 8.3.1 - CURSO-RELACIONADOS TEMPORARIAMENTE DESATIVADO
+ * @version 8.1.0 - FULL-WIDTH LAYOUT
  * @updated 2025-11-27
  * 
  * ESTRUTURA FULL-WIDTH:
  * - Hero Section: Full-width com background gradient
  * - Conteúdo Principal: Grid 2 colunas (conteúdo + sidebar)
- * - Cursos Relacionados: DESATIVADO (erro fatal linha 160)
+ * - Cursos Relacionados: Full-width com background
  * 
- * CORREÇÕES APLICADAS:
- * - Wrappers semânticos (<section>, <aside>)
- * - Grid 2 colunas implementado
- * - Curso-relacionados comentado por erro PHP fatal
+ * CORREÇÕES:
+ * - Removido CSS inline (já carregado via functions.php)
+ * - Estrutura HTML reorganizada para layout full-width
+ * - Wrappers semânticos adicionados (<section>, <aside>)
+ * - Grid 2 colunas implementado corretamente
  */
 
 if (!defined('ABSPATH')) {
@@ -83,55 +84,18 @@ while (have_posts()) : the_post();
 </section>
 
 <!-- ============================================
-     CURSOS RELACIONADOS - TEMPORARIAMENTE DESATIVADO
+     CURSOS RELACIONADOS - Full Width
+     Background cinza claro com grid de cards
      ============================================ -->
-<?php 
-/**
- * ⚠️ SEÇÃO DESATIVADA POR ERRO FATAL
- * 
- * Arquivo: /template-parts/curso/curso-relacionados.php
- * Erro: PHP Fatal error - TypeError: Illegal offset type
- * Linha: 160
- * Data: 28/11/2025 00:07:56 UTC
- * 
- * DESCRIÇÃO DO ERRO:
- * Tentando usar objeto ou array como chave de array PHP
- * Isso causa erro 500 (Internal Server Error) na página
- * 
- * IMPACTO:
- * - Página não carrega completamente
- * - Header renderiza sem CSS (fica gigante)
- * - Footer não renderiza
- * - Erro afeta todas as páginas de curso
- * 
- * PRÓXIMOS PASSOS:
- * 1. Enviar arquivo curso-relacionados.php para análise
- * 2. Identificar código problemático na linha 160
- * 3. Corrigir erro (provavelmente $array[$objeto] → $array[$objeto->ID])
- * 4. Reativar esta seção descomentando a linha abaixo
- * 
- * REATIVAR QUANDO CORRIGIDO:
- */
-// get_template_part('template-parts/curso/curso', 'relacionados'); 
-?>
-
-<!-- ============================================
-     FALLBACK TEMPORÁRIO: Mensagem ao Usuário
-     (Opcional - Remover quando relacionados voltar)
-     ============================================ -->
-<section class="cursos-relacionados-section" style="padding: 80px 0; background: #F8F9FA; text-align: center;">
-    <div style="max-width: 800px; margin: 0 auto; padding: 0 24px;">
-        <h2 style="font-size: 2rem; color: #1A1A1A; margin-bottom: 16px;">
-            Cursos Relacionados
-        </h2>
-        <p style="color: #777; font-size: 1.1rem;">
-            Em breve mostraremos aqui outros cursos que podem te interessar.
-        </p>
-        <a href="<?php echo home_url('/cursos/'); ?>" 
-           style="display: inline-block; margin-top: 24px; padding: 14px 32px; background: #0A3BE8; color: #FFFFFF; text-decoration: none; border-radius: 8px; font-weight: 700;">
-            Ver Todos os Cursos
-        </a>
-    </div>
+<section class="cursos-relacionados-section">
+    <?php 
+    /**
+     * Template Part: Cursos Relacionados
+     * Contém: Grid de cards de cursos da mesma categoria
+     * Localização: /template-parts/curso/curso-relacionados.php
+     */
+    get_template_part('template-parts/curso/curso', 'relacionados'); 
+    ?>
 </section>
 
 <?php 

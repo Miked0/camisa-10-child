@@ -15,7 +15,7 @@ body.single-curso .site-wrapper,
 body.single-curso .main-wrapper,
 body.single-curso .content-wrapper,
 body.single-curso #primary,
-body.single-curso #main, body {
+body.single-curso #main, . {
     max-width: none !important;
     width: 100% !important;
     padding: 0 !important;

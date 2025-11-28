@@ -1,9 +1,9 @@
 <?php
 /**
- * Header Template - Camisa 10 (CORRIGIDO)
+ * Header Template - Camisa 10
  * 
  * @package Camisa10
- * @version 8.5.2 - CORRIGIDO
+ * @version 8.5.2 - FALLBACK MANUAL PARA NAV
  * @updated 2025-11-27
  */
 ?>
